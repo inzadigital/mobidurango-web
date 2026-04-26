@@ -555,66 +555,6 @@
     }
     .actividad-publico svg { width: 14px; height: 14px; }
 
-    .cta-calendario {
-      background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-oscuro) 100%);
-      color: var(--blanco);
-      padding: 50px 40px;
-      border-radius: 16px;
-      margin-top: 50px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-calendario::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 200px; height: 200px;
-      background-color: var(--amarillo);
-      border-radius: 50%;
-      opacity: 0.12;
-      pointer-events: none;
-    }
-    .cta-calendario-contenido {
-      position: relative;
-      z-index: 1;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .cta-calendario h3 {
-      font-family: 'Archivo Black', sans-serif;
-      font-size: clamp(22px, 3vw, 30px);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-    .cta-calendario p {
-      font-size: 16px;
-      opacity: 0.95;
-      margin-bottom: 28px;
-    }
-    .boton-calendario {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background-color: var(--amarillo);
-      color: var(--gris-texto);
-      padding: 18px 36px;
-      border-radius: 50px;
-      font-family: 'Archivo Black', sans-serif;
-      font-size: 17px;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 20px rgba(255, 213, 0, 0.3);
-    }
-    .boton-calendario:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(255, 213, 0, 0.5);
-    }
-    .boton-calendario svg { width: 22px; height: 22px; }
-
     /* ===== SECCIÓN UBICACIÓN ===== */
     .ubicacion { padding: 80px 20px; background-color: var(--gris-claro); }
     .ubicacion-grid {
@@ -1168,7 +1108,6 @@
       .persona-foto { width: 120px; height: 120px; font-size: 42px; }
       .grid-actividades { grid-template-columns: 1fr; gap: 16px; }
       .actividades { padding: 60px 20px; }
-      .cta-calendario { padding: 40px 24px; }
       .ubicacion { padding: 60px 20px; }
       .ubicacion-info { padding: 32px 24px; }
       .mapa-pin-icono { width: 64px; height: 64px; }
