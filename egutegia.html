@@ -105,6 +105,40 @@
       background: var(--magenta-claro);
     }
 
+    /* ========== TOGGLE IDIOMA ========== */
+    .idioma-toggle {
+      display: inline-flex;
+      align-items: center;
+      background: var(--gris-claro);
+      border: 1px solid var(--gris-medio);
+      border-radius: 24px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .idioma-btn {
+      background: transparent;
+      border: none;
+      color: var(--gris-suave);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.05em;
+    }
+
+    .idioma-btn.activo {
+      background: var(--magenta);
+      color: var(--blanco);
+    }
+
+    .idioma-btn:not(.activo):hover {
+      color: var(--magenta);
+    }
+
     /* ========== TÍTULO PÁGINA ========== */
     .titulo-pagina {
       max-width: 1100px;
@@ -488,20 +522,25 @@
         <div class="logo">M</div>
         <div>
           <h1>Mobidurango</h1>
-          <div class="subtitulo-marca">Egutegi osoa · Calendario completo</div>
+          <div class="subtitulo-marca" data-i18n="subtitulo_marca">Egutegi osoa · Calendario completo</div>
         </div>
       </div>
-      <a href="/" class="volver">
-        ← Mobidurango orrira itzuli
-      </a>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div class="idioma-toggle" role="group" aria-label="Hizkuntza / Idioma">
+          <button class="idioma-btn activo" data-idioma="eu">EU</button>
+          <button class="idioma-btn" data-idioma="es">ES</button>
+        </div>
+        <a href="/" class="volver" data-i18n="volver">
+          ← Mobidurango orrira itzuli
+        </a>
+      </div>
     </div>
   </header>
 
   <!-- ========== TÍTULO ========== -->
   <div class="titulo-pagina">
-    <h2>Hurrengo ekitaldiak</h2>
-    <p>Durangaldean programatutako jarduera fisikoaren ekitaldi guztiak.<br>
-       Todos los eventos de actividad física programados en Durangaldea.</p>
+    <h2 data-i18n="titulo_pagina">Hurrengo ekitaldiak</h2>
+    <p data-i18n="subtitulo_pagina">Durangaldean programatutako jarduera fisikoaren ekitaldi guztiak.</p>
   </div>
 
   <!-- ========== FILTROS ========== -->
@@ -519,7 +558,7 @@
 
   <!-- ========== FOOTER ========== -->
   <footer class="pie">
-    <p>© 2026 Mobidurango · Durangoko Udalaren zerbitzua</p>
+    <p data-i18n="footer">© 2026 Mobidurango · Durangoko Udalaren zerbitzua</p>
   </footer>
 
 
@@ -536,6 +575,60 @@
       // -------- Configuración --------
       const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
       const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
+
+      // Diccionario de traducciones de la propia interfaz
+      // Los datos de eventos vienen de Supabase ya bilingües (titulo_eu, titulo_es, etc.)
+      const I18N = {
+        eu: {
+          subtitulo_marca:    'Egutegi osoa · Calendario completo',
+          volver:             '← Mobidurango orrira itzuli',
+          titulo_pagina:      'Hurrengo ekitaldiak',
+          subtitulo_pagina:   'Durangaldean programatutako jarduera fisikoaren ekitaldi guztiak.',
+          filtro_poblacion:   'Herria',
+          filtro_organizador: 'Antolatzailea',
+          btn_limpiar:        'Garbitu iragazkiak',
+          cargando:           'Kargatzen…',
+          sin_eventos:        'Une honetan ez dago programatutako ekitaldirik.',
+          sin_filtros:        'Iragazki horiekin ez dago bat datorren ekitaldirik.',
+          contador:           n => `${n} ekitaldi`,
+          error_titulo:       'Errorea kargatzean',
+          compartir_aria:     'Partekatu',
+          compartir_copiar:   'Esteka kopiatu',
+          toast_copiado:      'Kopiatu da',
+          toast_error_copiar: 'Errorea kopiatzean',
+          footer:             '© 2026 Mobidurango · Durangoko Udalaren zerbitzua',
+          locale:             'eu'
+        },
+        es: {
+          subtitulo_marca:    'Calendario completo · Egutegi osoa',
+          volver:             '← Volver a Mobidurango',
+          titulo_pagina:      'Próximos eventos',
+          subtitulo_pagina:   'Todos los eventos de actividad física programados en Durangaldea.',
+          filtro_poblacion:   'Población',
+          filtro_organizador: 'Organizador',
+          btn_limpiar:        'Limpiar filtros',
+          cargando:           'Cargando…',
+          sin_eventos:        'No hay eventos programados en este momento.',
+          sin_filtros:        'No hay eventos que coincidan con estos filtros.',
+          contador:           n => `${n} eventos`,
+          error_titulo:       'Error al cargar',
+          compartir_aria:     'Compartir',
+          compartir_copiar:   'Copiar enlace',
+          toast_copiado:      'Copiado al portapapeles',
+          toast_error_copiar: 'Error al copiar',
+          footer:             '© 2026 Mobidurango · Servicio del Ayuntamiento de Durango',
+          locale:             'es'
+        }
+      };
+
+      // Idioma activo (al cargar: primero localStorage, luego euskera por defecto)
+      let idiomaActivo = (function() {
+        try {
+          const guardado = localStorage.getItem('mobidu_idioma');
+          if (guardado === 'eu' || guardado === 'es') return guardado;
+        } catch { /* localStorage puede fallar en privado en algunos navegadores */ }
+        return 'eu';
+      })();
 
       // Mapa de slugs (BD) → nombres mostrados (con tildes y eñes)
       const POBLACIONES_MAP = {
@@ -591,8 +684,9 @@
           todosEventos = await r.json();
 
           if (!Array.isArray(todosEventos) || todosEventos.length === 0) {
+            const t = I18N[idiomaActivo];
             contenedor.innerHTML =
-              '<div class="egutegia-estado">Une honetan ez dago programatutako ekitaldirik.<br><small>No hay eventos programados en este momento.</small></div>';
+              `<div class="egutegia-estado">${escapar(t.sin_eventos)}</div>`;
             return;
           }
 
@@ -600,9 +694,10 @@
           render();
 
         } catch (err) {
+          const t = I18N[idiomaActivo];
           contenedor.innerHTML =
             `<div class="egutegia-estado error">
-               <strong>Errorea kargatzean / Error al cargar</strong><br>
+               <strong>${escapar(t.error_titulo)}</strong><br>
                <small>${escapar(err.message)}</small>
              </div>`;
           console.error('[Mobidurango egutegia]', err);
@@ -611,6 +706,7 @@
 
       // -------- Construir chips de filtro dinámicamente --------
       function construirFiltros() {
+        const t = I18N[idiomaActivo];
         const cont = document.getElementById('filtros');
 
         // Recoger valores únicos que realmente aparecen en los datos
@@ -626,24 +722,24 @@
 
         cont.innerHTML = `
           <div class="filtro-grupo">
-            <div class="filtro-titulo">Herria / Población</div>
+            <div class="filtro-titulo">${escapar(t.filtro_poblacion)}</div>
             <div class="filtro-chips" id="chips-poblacion">
               ${poblaciones.map(p => `
-                <button class="chip" data-tipo="poblacion" data-valor="${escapar(p)}">${escapar(POBLACIONES_MAP[p] || p)}</button>
+                <button class="chip ${filtrosActivos.poblacion.has(p) ? 'activo' : ''}" data-tipo="poblacion" data-valor="${escapar(p)}">${escapar(POBLACIONES_MAP[p] || p)}</button>
               `).join('')}
             </div>
           </div>
           <div class="filtro-grupo">
-            <div class="filtro-titulo">Antolatzailea / Organizador</div>
+            <div class="filtro-titulo">${escapar(t.filtro_organizador)}</div>
             <div class="filtro-chips" id="chips-organizador">
               ${organizadores.map(o => `
-                <button class="chip" data-tipo="organizador" data-valor="${escapar(o)}">${escapar(o)}</button>
+                <button class="chip ${filtrosActivos.organizador.has(o) ? 'activo' : ''}" data-tipo="organizador" data-valor="${escapar(o)}">${escapar(o)}</button>
               `).join('')}
             </div>
             <div class="filtros-acciones">
               <span></span>
-              <button class="btn-limpiar" id="btn-limpiar" disabled>
-                Garbitu iragazkiak / Limpiar filtros
+              <button class="btn-limpiar" id="btn-limpiar"${(filtrosActivos.organizador.size === 0 && filtrosActivos.poblacion.size === 0) ? ' disabled' : ''}>
+                ${escapar(t.btn_limpiar)}
               </button>
             </div>
           </div>
@@ -690,6 +786,7 @@
 
       // -------- Aplicar filtros y pintar lista --------
       function render() {
+        const t = I18N[idiomaActivo];
         const filtrados = todosEventos.filter(ev => {
           if (filtrosActivos.organizador.size > 0 && !filtrosActivos.organizador.has(ev.organizador)) {
             return false;
@@ -706,14 +803,14 @@
         // Mostrar contador solo si hay filtros activos
         if (filtrosActivos.organizador.size > 0 || filtrosActivos.poblacion.size > 0) {
           contador.style.display = 'block';
-          contador.textContent = `${filtrados.length} ekitaldi / ${filtrados.length} eventos`;
+          contador.textContent = t.contador(filtrados.length);
         } else {
           contador.style.display = 'none';
         }
 
         if (filtrados.length === 0) {
           cont.innerHTML =
-            '<div class="egutegia-estado">Iragazki horiekin ez dago bat datorren ekitaldirik.<br><small>No hay eventos que coincidan con estos filtros.</small></div>';
+            `<div class="egutegia-estado">${escapar(t.sin_filtros)}</div>`;
           return;
         }
 
@@ -768,10 +865,11 @@
 
       // -------- Copiar texto al portapapeles --------
       function copiarAlPortapapeles(texto) {
+        const t = I18N[idiomaActivo];
         if (navigator.clipboard) {
           navigator.clipboard.writeText(texto).then(
-            () => mostrarToast('Kopiatu da · Copiado al portapapeles'),
-            () => mostrarToast('Errorea kopiatzean · Error al copiar')
+            () => mostrarToast(t.toast_copiado),
+            () => mostrarToast(t.toast_error_copiar)
           );
         } else {
           // Fallback para navegadores antiguos
@@ -783,9 +881,9 @@
           ta.select();
           try {
             document.execCommand('copy');
-            mostrarToast('Kopiatu da · Copiado al portapapeles');
+            mostrarToast(t.toast_copiado);
           } catch {
-            mostrarToast('Errorea kopiatzean · Error al copiar');
+            mostrarToast(t.toast_error_copiar);
           }
           document.body.removeChild(ta);
         }
@@ -801,41 +899,46 @@
 
       // -------- Pintar tarjeta de evento --------
       function pintarEvento(ev) {
+        const t = I18N[idiomaActivo];
         const fecha = new Date(ev.fecha_inicio);
         const dia = fecha.getDate();
-        const mes = fecha.toLocaleDateString('eu', { month: 'short' }).replace('.', '');
-        const asteguna = fecha.toLocaleDateString('eu', { weekday: 'short' }).replace('.', '');
-        const hora = fecha.toLocaleTimeString('eu', { hour: '2-digit', minute: '2-digit' });
+        const mes = fecha.toLocaleDateString(t.locale, { month: 'short' }).replace('.', '');
+        const asteguna = fecha.toLocaleDateString(t.locale, { weekday: 'short' }).replace('.', '');
+        const hora = fecha.toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' });
 
-        const detalle = ev.detalle_eu || ev.detalle_es || '';
+        // Datos del evento — escogemos campo según idioma activo, con fallback al otro
+        const titulo = idiomaActivo === 'eu'
+          ? (ev.titulo_eu || ev.titulo_es || '')
+          : (ev.titulo_es || ev.titulo_eu || '');
+
+        const detalle = idiomaActivo === 'eu'
+          ? (ev.detalle_eu || ev.detalle_es || '')
+          : (ev.detalle_es || ev.detalle_eu || '');
+
         const detalleHtml = detalle ? `<div class="ekitaldia-detalle">${escapar(detalle)}</div>` : '';
-
         const poblacionTexto = ev.poblacion ? (POBLACIONES_MAP[ev.poblacion] || ev.poblacion) : '';
 
-        // Texto que se compartirá (preparado aquí, no en el momento del click)
-        const fechaLegible = fecha.toLocaleDateString('eu', {
+        // Texto compartido — siempre incluye ambos idiomas para que sirva al receptor
+        const fechaLegible = fecha.toLocaleDateString(t.locale, {
           day: 'numeric', month: 'long', year: 'numeric'
         });
-        const tituloCompartir = ev.titulo_eu || ev.titulo_es || '';
-        const detalleCompartir = ev.detalle_es || ev.detalle_eu || '';
         const lugarCompartir = ev.lugar || '';
         const organizadorCompartir = ev.organizador || '';
 
         const textoCompartir =
-          `📅 ${tituloCompartir}\n` +
+          `📅 ${titulo}\n` +
           `🗓️ ${fechaLegible} · ${hora}\n` +
           (lugarCompartir ? `📍 ${lugarCompartir}\n` : '') +
           (organizadorCompartir ? `👥 ${organizadorCompartir}\n` : '') +
-          (detalleCompartir ? `\n${detalleCompartir}\n` : '') +
-          `\n🌐 Mobidurango egutegia: https://mobidurango.vercel.app/egutegia.html`;
+          (detalle ? `\n${detalle}\n` : '') +
+          `\n🌐 https://mobidurango.vercel.app/egutegia.html`;
 
-        // Lo guardamos en data attribute como JSON-encoded para evitar problemas
         const textoEscapado = escapar(textoCompartir);
         const enlaceCalendario = 'https://mobidurango.vercel.app/egutegia.html';
 
         return `
           <article class="ekitaldia">
-            <button class="btn-compartir" data-texto="${textoEscapado}" data-enlace="${enlaceCalendario}" aria-label="Partekatu / Compartir">
+            <button class="btn-compartir" data-texto="${textoEscapado}" data-enlace="${enlaceCalendario}" aria-label="${escapar(t.compartir_aria)}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="18" cy="5" r="3"></circle>
                 <circle cx="6" cy="12" r="3"></circle>
@@ -856,7 +959,7 @@
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
-                Esteka kopiatu / Copiar enlace
+                ${escapar(t.compartir_copiar)}
               </button>
             </div>
             <div class="ekitaldia-data">
@@ -865,7 +968,7 @@
               <div class="asteguna">${escapar(asteguna)}</div>
             </div>
             <div class="ekitaldia-gorputza">
-              <h3>${escapar(ev.titulo_eu || ev.titulo_es || '')}</h3>
+              <h3>${escapar(titulo)}</h3>
               ${detalleHtml}
               <div class="ekitaldia-meta">
                 <span class="ordua">${escapar(hora)}</span>
@@ -886,10 +989,59 @@
       }
 
       // -------- Arranque --------
+      // -------- Aplicar idioma a textos estáticos del HTML --------
+      function aplicarIdioma() {
+        const t = I18N[idiomaActivo];
+
+        // Actualizar lang del documento (importante para accesibilidad y SEO)
+        document.documentElement.lang = idiomaActivo;
+
+        // Recorrer todos los elementos con data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const clave = el.dataset.i18n;
+          if (t[clave]) {
+            el.textContent = t[clave];
+          }
+        });
+
+        // Marcar el botón de idioma activo
+        document.querySelectorAll('.idioma-btn').forEach(btn => {
+          btn.classList.toggle('activo', btn.dataset.idioma === idiomaActivo);
+        });
+
+        // Re-renderizar lista y filtros con el nuevo idioma
+        if (todosEventos.length > 0) {
+          construirFiltros();
+          render();
+        }
+      }
+
+      // -------- Listeners del toggle de idioma --------
+      function engancharToggleIdioma() {
+        document.querySelectorAll('.idioma-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const nuevo = btn.dataset.idioma;
+            if (nuevo === idiomaActivo) return; // ya está activo
+            idiomaActivo = nuevo;
+            try {
+              localStorage.setItem('mobidu_idioma', nuevo);
+            } catch { /* localStorage puede fallar en privado */ }
+            aplicarIdioma();
+          });
+        });
+      }
+
+      // -------- Arranque --------
+      function init() {
+        engancharToggleIdioma();
+        aplicarIdioma();  // aplica el idioma guardado/por defecto a textos estáticos
+        cargar();         // arranca la carga de datos
+      }
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', cargar);
+        document.addEventListener('DOMContentLoaded', init);
       } else {
-        cargar();
+        init();
       }
 
     })();
