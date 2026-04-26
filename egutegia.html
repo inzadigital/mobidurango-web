@@ -510,6 +510,291 @@
       .ekitaldia-data .eguna { font-size: 1.6rem; }
       .ekitaldia-gorputza h3 { font-size: 1rem; }
     }
+
+    /* ========== BANNER DEMO ========== */
+    .banner-demo {
+      background: var(--amarillo);
+      color: var(--gris-texto);
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border-bottom: 2px solid #e0bd00;
+    }
+    .banner-demo strong {
+      font-family: 'Archivo Black', sans-serif;
+      letter-spacing: 0.08em;
+      margin-right: 8px;
+    }
+
+    /* ========== TOGGLE VISTA LISTA/MES ========== */
+    .vista-toggle-contenedor {
+      max-width: 1100px;
+      margin: 24px auto 0;
+      padding: 0 24px;
+      display: flex;
+      justify-content: center;
+    }
+    .vista-toggle {
+      display: inline-flex;
+      background: var(--blanco);
+      border: 1px solid var(--gris-medio);
+      border-radius: 28px;
+      padding: 4px;
+      gap: 2px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .vista-btn {
+      background: transparent;
+      border: none;
+      color: var(--gris-suave);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 22px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .vista-btn.activo {
+      background: var(--magenta);
+      color: var(--blanco);
+    }
+    .vista-btn:not(.activo):hover {
+      color: var(--magenta);
+    }
+
+    /* ========== VISTA MES ========== */
+    .egutegia-mes-contenedor {
+      max-width: 1100px;
+      margin: 24px auto 60px;
+      padding: 0 24px;
+    }
+    .mes-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+    .mes-nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--gris-medio);
+      background: var(--blanco);
+      color: var(--gris-texto);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .mes-nav-btn:hover {
+      border-color: var(--magenta);
+      color: var(--magenta);
+    }
+    .mes-nav-btn svg { width: 18px; height: 18px; }
+    .mes-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.4rem;
+      color: var(--gris-texto);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      min-width: 180px;
+      text-align: center;
+    }
+    .mes-grid {
+      background: var(--blanco);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .mes-cabecera-dia {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gris-suave);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: center;
+      padding: 8px 4px;
+    }
+    .mes-celda {
+      min-height: 90px;
+      border-radius: 6px;
+      padding: 6px;
+      background: var(--gris-claro);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: default;
+    }
+    .mes-celda.fuera-mes {
+      background: transparent;
+      opacity: 0.35;
+    }
+    .mes-celda.con-eventos {
+      cursor: pointer;
+    }
+    .mes-celda.con-eventos:hover {
+      background: var(--magenta-claro);
+    }
+    .mes-celda.hoy {
+      outline: 2px solid var(--magenta);
+      outline-offset: -2px;
+    }
+    .mes-celda-numero {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gris-texto);
+    }
+    .mes-celda.fuera-mes .mes-celda-numero {
+      color: var(--gris-suave);
+    }
+    .mes-evento-mini {
+      font-size: 0.7rem;
+      background: var(--magenta);
+      color: var(--blanco);
+      padding: 2px 6px;
+      border-radius: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    .mes-evento-mini .ordua {
+      font-weight: 700;
+      margin-right: 3px;
+      opacity: 0.95;
+    }
+    .mes-mas-eventos {
+      font-size: 0.7rem;
+      color: var(--magenta);
+      font-weight: 600;
+      text-align: center;
+      padding: 1px;
+    }
+    .mes-leyenda-movil {
+      display: none;
+      text-align: center;
+      color: var(--gris-suave);
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+
+    /* ========== MODAL DE DETALLE ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .modal-overlay.visible {
+      opacity: 1;
+    }
+    .modal {
+      background: var(--blanco);
+      border-radius: 12px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      padding: 32px 24px 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    .modal-cerrar {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      background: var(--gris-claro);
+      border: none;
+      border-radius: 50%;
+      color: var(--gris-suave);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .modal-cerrar:hover {
+      background: var(--magenta);
+      color: var(--blanco);
+    }
+    .modal-cerrar svg { width: 18px; height: 18px; }
+    .modal-evento {
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gris-medio);
+      margin-bottom: 16px;
+    }
+    .modal-evento:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .modal-evento h3 {
+      font-size: 1.15rem;
+      color: var(--gris-texto);
+      margin-bottom: 8px;
+      padding-right: 30px;
+    }
+    .modal-evento-fecha {
+      color: var(--magenta);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    .modal-evento-detalle {
+      color: var(--gris-suave);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .modal-evento-meta {
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+    }
+    .modal-evento-meta .chip-meta {
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Móvil: vista mes adaptada (puntos en vez de chips) */
+    @media (max-width: 700px) {
+      .mes-grid { padding: 8px; gap: 2px; }
+      .mes-celda { min-height: 56px; padding: 4px 2px; }
+      .mes-celda-numero { font-size: 0.78rem; }
+      .mes-cabecera-dia { padding: 4px 2px; font-size: 0.65rem; }
+      .mes-evento-mini {
+        /* En móvil mostrar solo punto, no texto */
+        font-size: 0;
+        padding: 0;
+        height: 6px;
+        width: 6px;
+        border-radius: 50%;
+        margin: 0 auto;
+      }
+      .mes-evento-mini .ordua { display: none; }
+      .mes-mas-eventos { display: none; }
+      .mes-leyenda-movil { display: block; }
+      .mes-titulo { font-size: 1.1rem; min-width: 140px; }
+    }
   </style>
 </head>
 
@@ -537,10 +822,24 @@
     </div>
   </header>
 
+  <!-- ========== BANNER DEMO (visible solo si hay eventos demo) ========== -->
+  <div id="banner-demo" class="banner-demo" style="display:none;">
+    <strong data-i18n="banner_demo_titulo">PROBA · DEMO</strong>
+    <span data-i18n="banner_demo_texto">Datu fiktizioak ebaluaziorako</span>
+  </div>
+
   <!-- ========== TÍTULO ========== -->
   <div class="titulo-pagina">
     <h2 data-i18n="titulo_pagina">Hurrengo ekitaldiak</h2>
     <p data-i18n="subtitulo_pagina">Durangaldean programatutako jarduera fisikoaren ekitaldi guztiak.</p>
+  </div>
+
+  <!-- ========== TOGGLE VISTA ========== -->
+  <div class="vista-toggle-contenedor">
+    <div class="vista-toggle" role="group">
+      <button class="vista-btn activo" data-vista="lista" data-i18n="vista_lista">Zerrenda</button>
+      <button class="vista-btn" data-vista="mes" data-i18n="vista_mes">Egutegia</button>
+    </div>
   </div>
 
   <!-- ========== FILTROS ========== -->
@@ -549,12 +848,52 @@
   </div>
 
   <!-- ========== LISTA ========== -->
-  <main class="egutegia-lista-contenedor">
+  <main class="egutegia-lista-contenedor" id="vista-lista">
     <div id="resultados-contador" class="resultados-contador" style="display:none;"></div>
     <div id="egutegia-edukia">
       <div class="egutegia-estado">Kargatzen… / Cargando…</div>
     </div>
   </main>
+
+  <!-- ========== VISTA MES ========== -->
+  <main class="egutegia-mes-contenedor" id="vista-mes" style="display:none;">
+
+    <!-- Navegación entre meses -->
+    <div class="mes-nav">
+      <button class="mes-nav-btn" id="btn-mes-anterior" aria-label="Aurreko hilabetea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h3 class="mes-titulo" id="mes-titulo">—</h3>
+      <button class="mes-nav-btn" id="btn-mes-siguiente" aria-label="Hurrengo hilabetea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cuadrícula del mes -->
+    <div class="mes-grid" id="mes-grid"></div>
+
+    <!-- Leyenda en móvil -->
+    <p class="mes-leyenda-movil" data-i18n="mes_leyenda_movil">
+      Sakatu egunaren gainean ekitaldiak ikusteko
+    </p>
+  </main>
+
+  <!-- ========== MODAL DE DETALLE DE EVENTO/DÍA ========== -->
+  <div class="modal-overlay" id="modal-overlay" style="display:none;">
+    <div class="modal" role="dialog" aria-modal="true">
+      <button class="modal-cerrar" id="modal-cerrar" aria-label="Itxi / Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="modal-contenido" id="modal-contenido"></div>
+    </div>
+  </div>
 
   <!-- ========== FOOTER ========== -->
   <footer class="pie">
@@ -597,7 +936,15 @@
           toast_copiado:      'Kopiatu da',
           toast_error_copiar: 'Errorea kopiatzean',
           footer:             '© 2026 Mobidurango · Durangoko Udalaren zerbitzua',
-          locale:             'eu'
+          locale:             'eu',
+          banner_demo_titulo: 'PROBA · DEMO',
+          banner_demo_texto:  'Datu fiktizioak ebaluaziorako',
+          vista_lista:        'Zerrenda',
+          vista_mes:          'Egutegia',
+          mes_leyenda_movil:  'Sakatu egunaren gainean ekitaldiak ikusteko',
+          dias_corto:         ['Al', 'As', 'Az', 'Os', 'Or', 'Lr', 'Ig'],
+          mes_mas_eventos:    n => `+${n} gehiago`,
+          modal_sin_eventos:  'Egun honetan ez dago ekitaldirik.'
         },
         es: {
           subtitulo_marca:    'Calendario completo · Egutegi osoa',
@@ -617,7 +964,15 @@
           toast_copiado:      'Copiado al portapapeles',
           toast_error_copiar: 'Error al copiar',
           footer:             '© 2026 Mobidurango · Servicio del Ayuntamiento de Durango',
-          locale:             'es'
+          locale:             'es',
+          banner_demo_titulo: 'PRUEBA · DEMO',
+          banner_demo_texto:  'Datos ficticios para evaluación',
+          vista_lista:        'Lista',
+          vista_mes:          'Mes',
+          mes_leyenda_movil:  'Pulsa sobre un día para ver los eventos',
+          dias_corto:         ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'],
+          mes_mas_eventos:    n => `+${n} más`,
+          modal_sin_eventos:  'No hay eventos este día.'
         }
       };
 
@@ -654,21 +1009,34 @@
         poblacion: new Set()
       };
 
+      // Vista activa: 'lista' o 'mes'. Por defecto: lista.
+      let vistaActiva = (function() {
+        try {
+          const v = localStorage.getItem('mobidu_vista');
+          if (v === 'lista' || v === 'mes') return v;
+        } catch {}
+        return 'lista';
+      })();
+
+      // Mes que está mostrando la vista mes (siempre primer día del mes a 00:00)
+      let mesMostrado = (function() {
+        const ahora = new Date();
+        return new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+      })();
+
       // -------- Carga inicial --------
       async function cargar() {
         const contenedor = document.getElementById('egutegia-edukia');
 
+        // En vista mes podemos navegar al pasado, así que NO filtramos por fecha en la query.
+        // El filtro de "futuros" lo aplicamos solo al renderizar la LISTA.
         const params = new URLSearchParams({
-          select: 'id,titulo_eu,titulo_es,detalle_eu,detalle_es,fecha_inicio,fecha_fin,lugar,organizador,poblacion',
+          select: 'id,titulo_eu,titulo_es,detalle_eu,detalle_es,fecha_inicio,fecha_fin,lugar,organizador,poblacion,es_demo',
           published: 'eq.true',
           estado: 'eq.publicado',
           tipo: 'eq.puntual',
           order: 'fecha_inicio.asc'
         });
-
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-        params.append('fecha_inicio', `gte.${hoy.toISOString()}`);
 
         const url = `${SUPABASE_URL}/rest/v1/eventos?${params}`;
 
@@ -690,8 +1058,14 @@
             return;
           }
 
+          // Detectar si hay eventos demo para mostrar banner
+          const hayDemos = todosEventos.some(ev => ev.es_demo === true);
+          if (hayDemos) {
+            document.getElementById('banner-demo').style.display = 'block';
+          }
+
           construirFiltros();
-          render();
+          aplicarVista(); // pinta la vista activa (lista o mes)
 
         } catch (err) {
           const t = I18N[idiomaActivo];
@@ -784,10 +1158,30 @@
         btn.disabled = !hayActivos;
       }
 
-      // -------- Aplicar filtros y pintar lista --------
-      function render() {
-        const t = I18N[idiomaActivo];
-        const filtrados = todosEventos.filter(ev => {
+      // -------- Decidir qué vista mostrar --------
+      function aplicarVista() {
+        const listaCont = document.getElementById('vista-lista');
+        const mesCont = document.getElementById('vista-mes');
+
+        if (vistaActiva === 'mes') {
+          listaCont.style.display = 'none';
+          mesCont.style.display = 'block';
+          renderMes();
+        } else {
+          listaCont.style.display = 'block';
+          mesCont.style.display = 'none';
+          renderLista();
+        }
+
+        // Marcar el botón activo
+        document.querySelectorAll('.vista-btn').forEach(btn => {
+          btn.classList.toggle('activo', btn.dataset.vista === vistaActiva);
+        });
+      }
+
+      // -------- Aplicar filtros (común a lista y mes) --------
+      function eventosFiltrados() {
+        return todosEventos.filter(ev => {
           if (filtrosActivos.organizador.size > 0 && !filtrosActivos.organizador.has(ev.organizador)) {
             return false;
           }
@@ -796,11 +1190,21 @@
           }
           return true;
         });
+      }
+
+      // -------- Render LISTA (solo futuros) --------
+      function renderLista() {
+        const t = I18N[idiomaActivo];
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        const filtrados = eventosFiltrados().filter(ev =>
+          new Date(ev.fecha_inicio) >= hoy
+        );
 
         const cont = document.getElementById('egutegia-edukia');
         const contador = document.getElementById('resultados-contador');
 
-        // Mostrar contador solo si hay filtros activos
         if (filtrosActivos.organizador.size > 0 || filtrosActivos.poblacion.size > 0) {
           contador.style.display = 'block';
           contador.textContent = t.contador(filtrados.length);
@@ -809,16 +1213,165 @@
         }
 
         if (filtrados.length === 0) {
-          cont.innerHTML =
-            `<div class="egutegia-estado">${escapar(t.sin_filtros)}</div>`;
+          cont.innerHTML = `<div class="egutegia-estado">${escapar(t.sin_filtros)}</div>`;
           return;
         }
 
-        cont.innerHTML =
-          '<div class="egutegia-lista">' + filtrados.map(pintarEvento).join('') + '</div>';
-
-        // Conectar los botones compartir tras pintar
+        cont.innerHTML = '<div class="egutegia-lista">' + filtrados.map(pintarEvento).join('') + '</div>';
         engancharBotonesCompartir();
+      }
+
+      // -------- Render MES --------
+      function renderMes() {
+        const t = I18N[idiomaActivo];
+        const grid = document.getElementById('mes-grid');
+        const titulo = document.getElementById('mes-titulo');
+
+        // Título del mes (con primera letra mayúscula)
+        const nombreMes = mesMostrado.toLocaleDateString(t.locale, {
+          month: 'long', year: 'numeric'
+        });
+        titulo.textContent = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+
+        // Calcular días del mes
+        const anio = mesMostrado.getFullYear();
+        const mes = mesMostrado.getMonth();
+        const primerDia = new Date(anio, mes, 1);
+        const ultimoDia = new Date(anio, mes + 1, 0);
+
+        // Día de la semana del primer día (0=domingo, 1=lunes, ..., 6=sábado)
+        // Convertir a formato europeo: 0=lunes, 6=domingo
+        const diaSemanaPrimero = (primerDia.getDay() + 6) % 7;
+
+        // Eventos filtrados de este mes (incluyendo pasados dentro del mes)
+        const eventosDelMes = eventosFiltrados().filter(ev => {
+          const f = new Date(ev.fecha_inicio);
+          return f.getFullYear() === anio && f.getMonth() === mes;
+        });
+
+        // Indexar eventos por día
+        const eventosPorDia = {};
+        eventosDelMes.forEach(ev => {
+          const d = new Date(ev.fecha_inicio).getDate();
+          if (!eventosPorDia[d]) eventosPorDia[d] = [];
+          eventosPorDia[d].push(ev);
+        });
+
+        // Hoy (para destacar la celda)
+        const hoy = new Date();
+        const esHoy = (dia) =>
+          hoy.getFullYear() === anio &&
+          hoy.getMonth() === mes &&
+          hoy.getDate() === dia;
+
+        // Construir HTML
+        let html = '';
+
+        // Cabecera con días de la semana
+        t.dias_corto.forEach(d => {
+          html += `<div class="mes-cabecera-dia">${escapar(d)}</div>`;
+        });
+
+        // Celdas vacías antes del día 1 (días del mes anterior)
+        for (let i = 0; i < diaSemanaPrimero; i++) {
+          html += '<div class="mes-celda fuera-mes"></div>';
+        }
+
+        // Días del mes
+        for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
+          const eventosDia = eventosPorDia[dia] || [];
+          const tieneEventos = eventosDia.length > 0;
+          const claseHoy = esHoy(dia) ? 'hoy' : '';
+          const claseConEventos = tieneEventos ? 'con-eventos' : '';
+
+          html += `<div class="mes-celda ${claseConEventos} ${claseHoy}" data-dia="${dia}">`;
+          html += `<div class="mes-celda-numero">${dia}</div>`;
+
+          // Mostrar hasta 3 eventos, el resto como "+N más"
+          const visibles = eventosDia.slice(0, 3);
+          visibles.forEach(ev => {
+            const fecha = new Date(ev.fecha_inicio);
+            const hora = fecha.toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' });
+            const titulo = idiomaActivo === 'eu'
+              ? (ev.titulo_eu || ev.titulo_es || '')
+              : (ev.titulo_es || ev.titulo_eu || '');
+            html += `<div class="mes-evento-mini" title="${escapar(hora + ' · ' + titulo)}">`;
+            html += `<span class="ordua">${escapar(hora)}</span>${escapar(titulo)}`;
+            html += `</div>`;
+          });
+
+          if (eventosDia.length > 3) {
+            html += `<div class="mes-mas-eventos">${escapar(t.mes_mas_eventos(eventosDia.length - 3))}</div>`;
+          }
+
+          html += `</div>`;
+        }
+
+        grid.innerHTML = html;
+
+        // Listeners en celdas con eventos
+        grid.querySelectorAll('.mes-celda.con-eventos').forEach(celda => {
+          celda.addEventListener('click', () => {
+            const dia = parseInt(celda.dataset.dia, 10);
+            abrirModalDia(dia, eventosPorDia[dia]);
+          });
+        });
+      }
+
+      // -------- Modal: mostrar eventos de un día --------
+      function abrirModalDia(dia, eventos) {
+        const t = I18N[idiomaActivo];
+        const overlay = document.getElementById('modal-overlay');
+        const cont = document.getElementById('modal-contenido');
+
+        cont.innerHTML = eventos.map(ev => {
+          const fecha = new Date(ev.fecha_inicio);
+          const fechaLegible = fecha.toLocaleDateString(t.locale, {
+            day: 'numeric', month: 'long', year: 'numeric'
+          });
+          const horaIni = fecha.toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' });
+          const horaFin = ev.fecha_fin
+            ? new Date(ev.fecha_fin).toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' })
+            : '';
+          const titulo = idiomaActivo === 'eu'
+            ? (ev.titulo_eu || ev.titulo_es || '')
+            : (ev.titulo_es || ev.titulo_eu || '');
+          const detalle = idiomaActivo === 'eu'
+            ? (ev.detalle_eu || ev.detalle_es || '')
+            : (ev.detalle_es || ev.detalle_eu || '');
+          const poblacionTexto = ev.poblacion ? (POBLACIONES_MAP[ev.poblacion] || ev.poblacion) : '';
+
+          return `
+            <div class="modal-evento">
+              <div class="modal-evento-fecha">
+                ${escapar(fechaLegible)} · ${escapar(horaIni)}${horaFin ? ' – ' + escapar(horaFin) : ''}
+              </div>
+              <h3>${escapar(titulo)}</h3>
+              ${detalle ? `<div class="modal-evento-detalle">${escapar(detalle)}</div>` : ''}
+              <div class="modal-evento-meta">
+                ${ev.lugar ? `<span>${escapar(ev.lugar)}</span>` : ''}
+                ${poblacionTexto ? `<span class="chip-meta chip-poblacion">${escapar(poblacionTexto)}</span>` : ''}
+                ${ev.organizador ? `<span class="chip-meta chip-organizador">${escapar(ev.organizador)}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        overlay.style.display = 'flex';
+        // Forzar reflow para que la transición funcione
+        void overlay.offsetWidth;
+        overlay.classList.add('visible');
+      }
+
+      function cerrarModal() {
+        const overlay = document.getElementById('modal-overlay');
+        overlay.classList.remove('visible');
+        setTimeout(() => { overlay.style.display = 'none'; }, 150);
+      }
+
+      // -------- Función render (alias para compatibilidad con código existente) --------
+      function render() {
+        aplicarVista();
       }
 
       // -------- Lógica de los botones compartir --------
@@ -1031,9 +1584,50 @@
         });
       }
 
+      // -------- Listeners del toggle de vista (Lista/Mes) --------
+      function engancharToggleVista() {
+        document.querySelectorAll('.vista-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const nuevo = btn.dataset.vista;
+            if (nuevo === vistaActiva) return;
+            vistaActiva = nuevo;
+            try {
+              localStorage.setItem('mobidu_vista', nuevo);
+            } catch {}
+            aplicarVista();
+          });
+        });
+      }
+
+      // -------- Listeners de navegación entre meses --------
+      function engancharNavMes() {
+        document.getElementById('btn-mes-anterior').addEventListener('click', () => {
+          mesMostrado = new Date(mesMostrado.getFullYear(), mesMostrado.getMonth() - 1, 1);
+          renderMes();
+        });
+        document.getElementById('btn-mes-siguiente').addEventListener('click', () => {
+          mesMostrado = new Date(mesMostrado.getFullYear(), mesMostrado.getMonth() + 1, 1);
+          renderMes();
+        });
+      }
+
+      // -------- Listeners del modal --------
+      function engancharModal() {
+        document.getElementById('modal-cerrar').addEventListener('click', cerrarModal);
+        document.getElementById('modal-overlay').addEventListener('click', e => {
+          if (e.target.id === 'modal-overlay') cerrarModal();
+        });
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') cerrarModal();
+        });
+      }
+
       // -------- Arranque --------
       function init() {
         engancharToggleIdioma();
+        engancharToggleVista();
+        engancharNavMes();
+        engancharModal();
         aplicarIdioma();  // aplica el idioma guardado/por defecto a textos estáticos
         cargar();         // arranca la carga de datos
       }
