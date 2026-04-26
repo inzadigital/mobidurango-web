@@ -943,6 +943,10 @@
           vista_mes:          'Egutegia',
           mes_leyenda_movil:  'Sakatu egunaren gainean ekitaldiak ikusteko',
           dias_corto:         ['Al', 'As', 'Az', 'Os', 'Or', 'Lr', 'Ig'],
+          meses_largo:        ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina',
+                               'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua'],
+          meses_corto:        ['urt', 'ots', 'mar', 'api', 'mai', 'eka',
+                               'uzt', 'abu', 'ira', 'urr', 'aza', 'abe'],
           mes_mas_eventos:    n => `+${n} gehiago`,
           modal_sin_eventos:  'Egun honetan ez dago ekitaldirik.'
         },
@@ -971,6 +975,10 @@
           vista_mes:          'Mes',
           mes_leyenda_movil:  'Pulsa sobre un día para ver los eventos',
           dias_corto:         ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'],
+          meses_largo:        ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                               'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          meses_corto:        ['ene', 'feb', 'mar', 'abr', 'may', 'jun',
+                               'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
           mes_mas_eventos:    n => `+${n} más`,
           modal_sin_eventos:  'No hay eventos este día.'
         }
@@ -1227,15 +1235,12 @@
         const grid = document.getElementById('mes-grid');
         const titulo = document.getElementById('mes-titulo');
 
-        // Título del mes (con primera letra mayúscula)
-        const nombreMes = mesMostrado.toLocaleDateString(t.locale, {
-          month: 'long', year: 'numeric'
-        });
-        titulo.textContent = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
-
-        // Calcular días del mes
+        // Título del mes — usamos tabla manual (los locales 'eu'/'es' no son fiables en todos los navegadores)
         const anio = mesMostrado.getFullYear();
         const mes = mesMostrado.getMonth();
+        titulo.textContent = `${t.meses_largo[mes]} ${anio}`;
+
+        // Calcular días del mes
         const primerDia = new Date(anio, mes, 1);
         const ultimoDia = new Date(anio, mes + 1, 0);
 
@@ -1326,9 +1331,8 @@
 
         cont.innerHTML = eventos.map(ev => {
           const fecha = new Date(ev.fecha_inicio);
-          const fechaLegible = fecha.toLocaleDateString(t.locale, {
-            day: 'numeric', month: 'long', year: 'numeric'
-          });
+          // Fecha legible con tabla manual de meses
+          const fechaLegible = `${fecha.getDate()} ${t.meses_largo[fecha.getMonth()].toLowerCase()} ${fecha.getFullYear()}`;
           const horaIni = fecha.toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' });
           const horaFin = ev.fecha_fin
             ? new Date(ev.fecha_fin).toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' })
@@ -1455,8 +1459,11 @@
         const t = I18N[idiomaActivo];
         const fecha = new Date(ev.fecha_inicio);
         const dia = fecha.getDate();
-        const mes = fecha.toLocaleDateString(t.locale, { month: 'short' }).replace('.', '');
-        const asteguna = fecha.toLocaleDateString(t.locale, { weekday: 'short' }).replace('.', '');
+        // Meses con tabla manual — los locales no son fiables en todos los navegadores
+        const mes = t.meses_corto[fecha.getMonth()];
+        // Día de la semana: índice europeo (0=lunes, 6=domingo)
+        const indiceDia = (fecha.getDay() + 6) % 7;
+        const asteguna = t.dias_corto[indiceDia];
         const hora = fecha.toLocaleTimeString(t.locale, { hour: '2-digit', minute: '2-digit' });
 
         // Datos del evento — escogemos campo según idioma activo, con fallback al otro
@@ -1472,9 +1479,7 @@
         const poblacionTexto = ev.poblacion ? (POBLACIONES_MAP[ev.poblacion] || ev.poblacion) : '';
 
         // Texto compartido — siempre incluye ambos idiomas para que sirva al receptor
-        const fechaLegible = fecha.toLocaleDateString(t.locale, {
-          day: 'numeric', month: 'long', year: 'numeric'
-        });
+        const fechaLegible = `${dia} ${t.meses_largo[fecha.getMonth()].toLowerCase()} ${fecha.getFullYear()}`;
         const lugarCompartir = ev.lugar || '';
         const organizadorCompartir = ev.organizador || '';
 
