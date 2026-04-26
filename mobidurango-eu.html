@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobidurango · Jarduera fisikoaren orientazio zerbitzua Durangon</title>
+  <meta name="description" content="Mobidurango Durangoko doako zerbitzua da, jarduera fisikoan orientatzeko eta laguntzeko. Bizitza aktiboago eta osasungarriago baterako bidea hemen hasten da.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --magenta: #C6007E;
+      --magenta-oscuro: #9E0065;
+      --magenta-claro: #FDE6F2;
+      --amarillo: #FFD500;
+      --gris-texto: #2A2A2A;
+      --gris-suave: #666666;
+      --gris-claro: #F5F5F5;
+      --gris-medio: #E5E5E5;
+      --gris-oscuro: #4A4A4A;
+      --gris-footer: #1F1F1F;
+      --gris-footer-claro: #333333;
+      --blanco: #FFFFFF;
+      --whatsapp: #25D366;
+      --whatsapp-oscuro: #1EBE5D;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--gris-texto);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== BARRA IDIOMA ===== */
+    .barra-idioma {
+      background-color: var(--gris-claro);
+      padding: 8px 20px;
+      text-align: right;
+      font-size: 14px;
+    }
+    .barra-idioma a {
+      color: var(--gris-texto);
+      text-decoration: none;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    .barra-idioma a.activo { background-color: var(--magenta); color: var(--blanco); }
+    .barra-idioma a:hover { background-color: var(--magenta-oscuro); color: var(--blanco); }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-oscuro) 100%);
+      color: var(--blanco);
+      padding: 60px 20px 40px;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 300px; height: 300px;
+      background-color: var(--amarillo);
+      border-radius: 50%;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .hero-contenido { max-width: 900px; position: relative; z-index: 1; }
+    .hero-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      margin-bottom: 40px;
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+    }
+    .hero-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(32px, 6vw, 56px);
+      line-height: 1.1;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+    }
+    .hero-subtitulo {
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 400;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== BOTONES ===== */
+    .botones {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+    .boton {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      min-height: 54px;
+      cursor: pointer;
+      border: none;
+    }
+    .boton-whatsapp {
+      background-color: var(--whatsapp);
+      color: var(--blanco);
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    }
+    .boton-whatsapp:hover {
+      background-color: var(--whatsapp-oscuro);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+    }
+    .boton-secundario {
+      background-color: transparent;
+      color: var(--blanco);
+      border: 2px solid var(--blanco);
+    }
+    .boton-secundario:hover {
+      background-color: var(--blanco);
+      color: var(--magenta);
+      transform: translateY(-2px);
+    }
+    .boton svg { width: 22px; height: 22px; }
+
+    /* ===== FLECHA ABAJO ===== */
+    .flecha-abajo {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--blanco);
+      opacity: 0.8;
+      animation: rebotar 2s infinite;
+      cursor: pointer;
+    }
+    .flecha-abajo svg { width: 32px; height: 32px; }
+    @keyframes rebotar {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(10px); }
+    }
+
+    /* ===== SECCIÓN "¿QUÉ ES?" ===== */
+    .que-es { padding: 80px 20px; background-color: var(--blanco); }
+    .contenedor { max-width: 1100px; margin: 0 auto; }
+    .seccion-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      color: var(--magenta);
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.1;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      letter-spacing: -0.5px;
+    }
+    .que-es-texto {
+      font-size: clamp(16px, 2vw, 18px);
+      color: var(--gris-texto);
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+    .que-es-texto:last-of-type { margin-bottom: 50px; }
+
+    .pilares {
+      background-color: var(--magenta);
+      color: var(--blanco);
+      padding: 50px 30px;
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+    .pilar { text-align: left; }
+    .pilar-icono { width: 56px; height: 56px; margin-bottom: 20px; color: var(--blanco); }
+    .pilar-icono svg { width: 100%; height: 100%; }
+    .pilar-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 20px; margin-bottom: 12px; text-transform: uppercase;
+    }
+    .pilar-texto { font-size: 15px; line-height: 1.5; opacity: 0.95; }
+
+    /* ===== SECCIÓN "¿CÓMO FUNCIONA?" ===== */
+    .como-funciona {
+      padding: 80px 20px;
+      background-color: var(--gris-claro);
+      text-align: center;
+    }
+    .eyebrow {
+      display: inline-block;
+      background-color: var(--amarillo);
+      color: var(--gris-texto);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .como-funciona .seccion-titulo {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 60px;
+    }
+    .pasos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      position: relative;
+    }
+    .pasos::before {
+      content: '';
+      position: absolute;
+      top: 40px; left: 15%; right: 15%;
+      height: 2px;
+      background: repeating-linear-gradient(
+        to right, var(--magenta) 0, var(--magenta) 8px,
+        transparent 8px, transparent 16px
+      );
+      z-index: 0;
+    }
+    .paso {
+      background-color: var(--magenta);
+      color: var(--blanco);
+      padding: 50px 24px 30px;
+      border-radius: 12px;
+      position: relative;
+      text-align: left;
+      z-index: 1;
+    }
+    .paso-numero {
+      position: absolute;
+      top: -24px; left: 24px;
+      width: 48px; height: 48px;
+      background-color: var(--amarillo);
+      color: var(--magenta);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .paso-comillas {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      opacity: 0.3;
+      margin-bottom: 8px;
+    }
+    .paso-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .paso-texto { font-size: 15px; line-height: 1.5; opacity: 0.95; }
+
+    /* ===== SECCIÓN "¿CÓMO ACCEDER?" ===== */
+    .acceso { padding: 80px 20px; background-color: var(--blanco); }
+    .acceso .seccion-titulo {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 50px;
+    }
+    .vias-acceso {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .via {
+      padding: 40px 32px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    .via-principal { background-color: var(--magenta); color: var(--blanco); }
+    .via-secundaria {
+      background-color: var(--gris-claro);
+      color: var(--gris-texto);
+      border: 2px solid var(--gris-medio);
+    }
+    .via-icono { width: 48px; height: 48px; margin-bottom: 20px; }
+    .via-icono svg { width: 100%; height: 100%; }
+    .via-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 24px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+    .via-texto { font-size: 15px; line-height: 1.5; margin-bottom: 28px; }
+    .boton-telefono {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background-color: var(--blanco);
+      color: var(--magenta);
+      padding: 16px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      letter-spacing: -0.5px;
+      transition: all 0.2s ease;
+      margin-top: auto;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+    .boton-telefono:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    }
+    .boton-telefono small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+    .boton-telefono-flecha {
+      background-color: var(--magenta);
+      color: var(--blanco);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .boton-telefono-flecha svg { width: 18px; height: 18px; }
+    .logo-osakidetza {
+      font-family: 'Archivo Black', sans-serif;
+      color: var(--gris-texto);
+      font-size: 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-osakidetza::before {
+      content: '+';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      background-color: var(--gris-texto);
+      color: var(--blanco);
+      border-radius: 6px;
+      font-size: 20px;
+    }
+    .entidades {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+    .entidad-chip {
+      background-color: var(--blanco);
+      border: 1px solid var(--gris-medio);
+      color: var(--gris-texto);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ===== SECCIÓN EQUIPO ===== */
+    .equipo { padding: 80px 20px; background-color: var(--gris-claro); }
+    .equipo .seccion-titulo {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 60px;
+    }
+    .personas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .persona {
+      padding: 40px 32px;
+      border-radius: 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .persona-magenta { background-color: var(--magenta); color: var(--blanco); }
+    .persona-oscura { background-color: var(--gris-oscuro); color: var(--blanco); }
+    .persona-foto {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background-color: var(--blanco);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 48px;
+      letter-spacing: -2px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+    }
+    .persona-magenta .persona-foto { color: var(--magenta); }
+    .persona-oscura .persona-foto { color: var(--gris-oscuro); }
+    .persona-nombre {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 24px;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .persona-separador {
+      width: 40px;
+      height: 3px;
+      background-color: var(--amarillo);
+      margin-bottom: 20px;
+      border-radius: 2px;
+    }
+    .persona-titulacion {
+      font-size: 14px;
+      line-height: 1.5;
+      opacity: 0.95;
+      margin-bottom: 8px;
+    }
+    .persona-titulacion:last-child { margin-bottom: 0; }
+    .equipo-cierre {
+      text-align: center;
+      font-size: 16px;
+      color: var(--gris-suave);
+      margin-top: 50px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== SECCIÓN ACTIVIDADES ===== */
+    .actividades { padding: 80px 20px; background-color: var(--blanco); }
+    .actividades .seccion-titulo {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 16px;
+    }
+    .actividades-intro {
+      text-align: center;
+      font-size: clamp(16px, 2vw, 18px);
+      color: var(--gris-suave);
+      max-width: 700px;
+      margin: 0 auto 50px;
+    }
+    .grid-actividades {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .actividad {
+      background-color: var(--blanco);
+      border: 2px solid var(--gris-medio);
+      border-radius: 12px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .actividad:hover {
+      border-color: var(--magenta);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(198, 0, 126, 0.15);
+    }
+    .actividad-icono {
+      width: 56px;
+      height: 56px;
+      background-color: var(--magenta-claro);
+      color: var(--magenta);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .actividad-icono svg { width: 32px; height: 32px; }
+    .actividad-categoria {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--magenta);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .actividad-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 19px;
+      margin-bottom: 12px;
+      color: var(--gris-texto);
+      line-height: 1.2;
+    }
+    .actividad-texto {
+      font-size: 14px;
+      color: var(--gris-suave);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+    .actividad-publico {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--gris-claro);
+      color: var(--gris-texto);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      align-self: flex-start;
+    }
+    .actividad-publico svg { width: 14px; height: 14px; }
+
+    .cta-calendario {
+      background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-oscuro) 100%);
+      color: var(--blanco);
+      padding: 50px 40px;
+      border-radius: 16px;
+      margin-top: 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-calendario::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background-color: var(--amarillo);
+      border-radius: 50%;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+    .cta-calendario-contenido {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .cta-calendario h3 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+    .cta-calendario p {
+      font-size: 16px;
+      opacity: 0.95;
+      margin-bottom: 28px;
+    }
+    .boton-calendario {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--amarillo);
+      color: var(--gris-texto);
+      padding: 18px 36px;
+      border-radius: 50px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 17px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(255, 213, 0, 0.3);
+    }
+    .boton-calendario:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(255, 213, 0, 0.5);
+    }
+    .boton-calendario svg { width: 22px; height: 22px; }
+
+    /* ===== SECCIÓN UBICACIÓN ===== */
+    .ubicacion { padding: 80px 20px; background-color: var(--gris-claro); }
+    .ubicacion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: stretch;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .mapa-visual {
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 420px;
+      background-color: #E8F0E8;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mapa-visual:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+    .mapa-visual svg.mapa-fondo {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .mapa-pin {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .mapa-pin-icono {
+      width: 80px;
+      height: 80px;
+      color: var(--magenta);
+      filter: drop-shadow(0 4px 12px rgba(198, 0, 126, 0.4));
+      animation: latido 2s ease-in-out infinite;
+    }
+    @keyframes latido {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-6px) scale(1.05); }
+    }
+    .mapa-pin-etiqueta {
+      background-color: var(--blanco);
+      color: var(--gris-texto);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 15px;
+      margin-top: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .mapa-pin-indicacion {
+      margin-top: 16px;
+      background-color: var(--magenta);
+      color: var(--blanco);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mapa-pin-indicacion svg { width: 14px; height: 14px; }
+    .ubicacion-info {
+      background-color: var(--magenta);
+      color: var(--blanco);
+      padding: 40px 36px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    .ubicacion-icono {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 20px;
+      color: var(--amarillo);
+    }
+    .ubicacion-icono svg { width: 100%; height: 100%; }
+    .ubicacion-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .ubicacion-direccion {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .ubicacion-detalle {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-bottom: 28px;
+    }
+    .ubicacion-aviso {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-left: 4px solid var(--amarillo);
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 32px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .ubicacion-aviso strong {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .boton-mapa {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: var(--blanco);
+      color: var(--magenta);
+      padding: 16px 28px;
+      border-radius: 50px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 16px;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+      margin-top: auto;
+      align-self: flex-start;
+    }
+    .boton-mapa:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+    .boton-mapa svg { width: 18px; height: 18px; }
+
+    /* ===== SECCIÓN CONTACTO ===== */
+    .contacto {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, var(--magenta) 0%, var(--magenta-oscuro) 100%);
+      color: var(--blanco);
+      position: relative;
+      overflow: hidden;
+    }
+    .contacto::before {
+      content: '';
+      position: absolute;
+      top: -150px; left: -150px;
+      width: 400px; height: 400px;
+      background-color: var(--amarillo);
+      border-radius: 50%;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .contacto-contenido {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contacto-eyebrow {
+      display: inline-block;
+      background-color: var(--amarillo);
+      color: var(--gris-texto);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .contacto-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(32px, 6vw, 56px);
+      line-height: 1.1;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+    }
+    .contacto-subtitulo {
+      font-size: clamp(16px, 2vw, 18px);
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto 50px;
+    }
+    .contacto-recordatorio {
+      background-color: var(--amarillo);
+      color: var(--gris-texto);
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 15px;
+      margin-bottom: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 16px rgba(255, 213, 0, 0.3);
+    }
+    .contacto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: stretch;
+    }
+    .qr-bloque {
+      background-color: var(--blanco);
+      color: var(--gris-texto);
+      padding: 40px 32px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    }
+    .qr-titulo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+      color: var(--magenta);
+      text-transform: uppercase;
+    }
+    .qr-subtitulo {
+      font-size: 14px;
+      color: var(--gris-suave);
+      margin-bottom: 24px;
+    }
+    .qr-imagen {
+      width: 220px;
+      height: 220px;
+      background-color: var(--blanco);
+      border: 2px solid var(--gris-medio);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+    .qr-imagen svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .qr-leyenda {
+      font-size: 13px;
+      color: var(--gris-suave);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .qr-leyenda svg { width: 16px; height: 16px; }
+    .contacto-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .contacto-card {
+      background-color: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 20px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-decoration: none;
+      color: var(--blanco);
+      transition: all 0.2s ease;
+      text-align: left;
+      backdrop-filter: blur(10px);
+    }
+    .contacto-card:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(4px);
+    }
+    .contacto-card-whatsapp {
+      background-color: var(--whatsapp);
+      border-color: var(--whatsapp);
+    }
+    .contacto-card-whatsapp:hover {
+      background-color: var(--whatsapp-oscuro);
+    }
+    .contacto-card-icono {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .contacto-card-icono svg {
+      width: 26px;
+      height: 26px;
+      color: var(--blanco);
+    }
+    .contacto-card-texto { flex-grow: 1; }
+    .contacto-card-label {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 2px;
+      display: block;
+    }
+    .contacto-card-valor {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      display: block;
+    }
+    .contacto-card-flecha {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+    .contacto-card-flecha svg { width: 100%; height: 100%; }
+
+    /* ========================================================
+       FOOTER (NUEVO)
+       ======================================================== */
+    footer {
+      background-color: var(--gris-footer);
+      color: var(--blanco);
+      padding: 60px 20px 0;
+    }
+
+    .footer-contenedor {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ===== ZONA SUPERIOR: LOGOS COLABORADORES ===== */
+    .footer-colaboradores {
+      padding-bottom: 50px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .footer-colaboradores-titulo {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.6;
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+
+    /* Grid de "logos" (de momento texto estilizado) */
+    .footer-logos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* Cada "logo" es una caja con texto */
+    .footer-logo {
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 16px 28px;
+      border-radius: 8px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      color: var(--blanco);
+    }
+    .footer-logo:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* ===== ZONA MEDIA: COLUMNAS DE INFO ===== */
+    .footer-columnas {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 50px;
+    }
+
+    /* Columna individual */
+    .footer-columna h4 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      color: var(--amarillo);
+    }
+
+    /* Columna de marca (la primera, más ancha) */
+    .footer-marca-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 28px;
+      color: var(--blanco);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-marca-descripcion {
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    /* Redes sociales */
+    .footer-redes {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-red {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blanco);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .footer-red:hover {
+      background-color: var(--magenta);
+      transform: translateY(-2px);
+    }
+    .footer-red svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Lista de enlaces */
+    .footer-lista {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-lista li {
+      margin-bottom: 10px;
+    }
+
+    .footer-lista a {
+      color: rgba(255, 255, 255, 0.75);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-lista a:hover {
+      color: var(--amarillo);
+    }
+
+    /* Info de contacto en columna */
+    .footer-info-item {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .footer-info-item svg {
+      width: 16px;
+      height: 16px;
+      color: var(--amarillo);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .footer-info-item a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .footer-info-item a:hover { color: var(--amarillo); }
+
+    /* ===== ZONA INFERIOR: COPYRIGHT + LEGAL ===== */
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 24px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      opacity: 0.6;
+    }
+
+    .footer-legal {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s ease;
+    }
+    .footer-legal a:hover { color: var(--amarillo); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .grid-actividades { grid-template-columns: repeat(2, 1fr); }
+      .ubicacion-grid { grid-template-columns: 1fr; }
+      .mapa-visual { min-height: 280px; }
+      .contacto-grid { grid-template-columns: 1fr; gap: 24px; }
+
+      /* Footer: 2 columnas en tablet */
+      .footer-columnas {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pilares { grid-template-columns: 1fr; gap: 32px; padding: 40px 24px; }
+      .que-es { padding: 60px 20px; }
+      .pasos { grid-template-columns: 1fr; gap: 40px; }
+      .pasos::before { display: none; }
+      .como-funciona { padding: 60px 20px; }
+      .vias-acceso { grid-template-columns: 1fr; gap: 20px; }
+      .acceso { padding: 60px 20px; }
+      .personas { grid-template-columns: 1fr; gap: 20px; }
+      .equipo { padding: 60px 20px; }
+      .persona-foto { width: 120px; height: 120px; font-size: 42px; }
+      .grid-actividades { grid-template-columns: 1fr; gap: 16px; }
+      .actividades { padding: 60px 20px; }
+      .cta-calendario { padding: 40px 24px; }
+      .ubicacion { padding: 60px 20px; }
+      .ubicacion-info { padding: 32px 24px; }
+      .mapa-pin-icono { width: 64px; height: 64px; }
+      .contacto { padding: 60px 20px; }
+      .qr-imagen { width: 180px; height: 180px; }
+      .qr-bloque { padding: 32px 24px; }
+      .contacto-card-valor { font-size: 17px; }
+
+      /* Footer: 1 columna en móvil */
+      .footer-columnas {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-logos { gap: 16px; }
+      .footer-logo { font-size: 13px; padding: 12px 20px; }
+    }
+
+    @media (max-width: 600px) {
+      .botones { flex-direction: column; align-items: stretch; padding: 0 20px; }
+      .boton { justify-content: center; }
+      .hero { padding: 40px 20px 30px; }
+      .boton-telefono { font-size: 19px; }
+    }
+    /* ===== EGUTEGIA · Calendario en vivo ===== */
+    .egutegia-bloque {
+      max-width: 720px;
+      margin: 40px auto 0;
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 32px 24px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+    .egutegia-cabecera {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--magenta-claro);
+    }
+    .egutegia-cabecera h2 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.8rem;
+      color: var(--magenta);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .egutegia-cabecera p {
+      color: var(--gris-suave);
+      font-size: 0.95rem;
+    }
+    .egutegia-estado {
+      padding: 32px 16px;
+      text-align: center;
+      color: var(--gris-suave);
+      font-size: 0.95rem;
+    }
+    .egutegia-estado.error {
+      color: var(--magenta-oscuro);
+      background: var(--magenta-claro);
+      border-radius: 8px;
+    }
+    .egutegia-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .ekitaldia {
+      display: flex;
+      gap: 18px;
+      align-items: stretch;
+      background: var(--blanco);
+      border: 1px solid var(--gris-medio);
+      border-radius: 12px;
+      padding: 16px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .ekitaldia:hover {
+      border-color: var(--magenta);
+      transform: translateY(-1px);
+    }
+    .ekitaldia-data {
+      flex-shrink: 0;
+      width: 76px;
+      background: var(--magenta);
+      color: var(--blanco);
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .ekitaldia-data .eguna {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.9rem;
+      line-height: 1;
+    }
+    .ekitaldia-data .hilabetea {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .ekitaldia-data .asteguna {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 6px;
+      opacity: 0.85;
+    }
+    .ekitaldia-gorputza {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .ekitaldia-gorputza h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gris-texto);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .ekitaldia-meta {
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+    }
+    .ekitaldia-meta .ordua {
+      color: var(--magenta);
+      font-weight: 600;
+    }
+    .ekitaldia-meta .antolatzailea {
+      background: var(--magenta-claro);
+      color: var(--magenta-oscuro);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    @media (max-width: 480px) {
+      .egutegia-bloque { padding: 24px 16px; }
+      .ekitaldia { padding: 12px; gap: 12px; }
+      .ekitaldia-data { width: 64px; padding: 8px 4px; }
+      .ekitaldia-data .eguna { font-size: 1.6rem; }
+    }
+
+    /* CTA "Ver todos los eventos" */
+    .egutegia-cta {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--gris-medio);
+      text-align: center;
+    }
+    .boton-egutegia-osoa {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--magenta);
+      color: var(--blanco);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 24px;
+      border-radius: 28px;
+      transition: background 0.15s, transform 0.15s;
+      font-family: inherit;
+    }
+    .boton-egutegia-osoa:hover {
+      background: var(--magenta-oscuro);
+      transform: translateY(-1px);
+    }
+    .boton-egutegia-osoa-flecha {
+      transition: transform 0.15s;
+    }
+    .boton-egutegia-osoa:hover .boton-egutegia-osoa-flecha {
+      transform: translateX(3px);
+    }
+    .egutegia-cta-subtitulo {
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+      margin-top: 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== BARRA IDIOMA ===== -->
+  <div class="barra-idioma">
+    <a href="mobidurango-eu.html" class="activo">EU</a>
+    <a href="mobidurango-es.html">ES</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-contenido">
+      <div class="hero-logo">mobidurango</div>
+      <h1 class="hero-titulo">
+        Bizitza aktiboago eta osasungarriago baterako bidea hemen hasten da
+      </h1>
+      <p class="hero-subtitulo">
+        Durangoko doako orientazio eta laguntza zerbitzua jarduera fisikoan.
+        Aktiboagoa izaten laguntzen dizugu, urratsez urrats.
+      </p>
+      <div class="botones">
+        <a href="https://wa.me/34637419418?text=Kaixo!%20Mobidurangori%20buruz%20informazio%20gehiago%20nahi%20dut."
+           class="boton boton-whatsapp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          WhatsApp: 637 419 418
+        </a>
+        <a href="#que-es" class="boton boton-secundario">
+          Gehiago jakin
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <a href="#que-es" class="flecha-abajo" aria-label="Jarraitu irakurtzen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </section>
+
+  <!-- ===== ZER DA MOBIDURANGO? ===== -->
+  <section id="que-es" class="que-es">
+    <div class="contenedor">
+      <h2 class="seccion-titulo">Zer da<br>Mobidurango?</h2>
+      <p class="que-es-texto">
+        Mobidurango Durangoko pertsonentzako jarduera fisikoaren orientazio zerbitzua da.
+        Gure helburua jarraipena, laguntza eta aholkuak eskaintzea da, fisikoki aktiboagoa izan zaitezen.
+      </p>
+      <p class="que-es-texto">
+        Badakigu mugimenduak zure osasunerako eta ongizaterako duen garrantzia,
+        eta urrats bakoitzean laguntzeko gaude hemen.
+      </p>
+      <div class="pilares">
+        <div class="pilar">
+          <div class="pilar-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="pilar-titulo">Orientazio pertsonala</h3>
+          <p class="pilar-texto">
+            Elkarrizketa batekin hasiko gara, zure beharrak, interesak eta gustuak ezagutzeko.
+            Plan bat sortuko dugu zuretzat bakarrik.
+          </p>
+        </div>
+        <div class="pilar">
+          <div class="pilar-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M13 3l-1.5 4.5M11 21l1.5-4.5M3 13l4.5-1.5M21 11l-4.5 1.5M5.636 5.636l3.182 3.182M15.182 15.182l3.182 3.182M5.636 18.364l3.182-3.182M15.182 8.818l3.182-3.182" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="pilar-titulo">Egokitutako jarduerak</h3>
+          <p class="pilar-texto">
+            Taldeko ibilaldietatik berariazko indar-programetara.
+            Jarduera ezin hobea aurkituko dugu zure egoerarako.
+          </p>
+        </div>
+        <div class="pilar">
+          <div class="pilar-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01M3 3l18 18" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="pilar-titulo">Doako zerbitzua</h3>
+          <p class="pilar-texto">
+            Mobidurango zerbitzu publikoa da Durangoko hiri osoarentzat.
+            Kosturik gabe.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NOLA FUNTZIONATZEN DU? ===== -->
+  <section id="como-funciona" class="como-funciona">
+    <div class="contenedor">
+      <span class="eyebrow">3 urrats erraz</span>
+      <h2 class="seccion-titulo">Hasiera ematea uste duzuna baino errazagoa da</h2>
+      <div class="pasos">
+        <div class="paso">
+          <div class="paso-numero">1</div>
+          <div class="paso-comillas">"</div>
+          <h3 class="paso-titulo">Jarri gurekin harremanetan</h3>
+          <p class="paso-texto">Deitu edo bidali mezu bat aurretiko hitzordua eskatzeko.</p>
+        </div>
+        <div class="paso">
+          <div class="paso-numero">2</div>
+          <div class="paso-comillas">"</div>
+          <h3 class="paso-titulo">Hasierako elkarrizketa</h3>
+          <p class="paso-texto">
+            Zure helburuei buruz hitz egiteko eta zuretzat ibilbide onena
+            aurkitzeko bilduko gara.
+          </p>
+        </div>
+        <div class="paso">
+          <div class="paso-numero">3</div>
+          <div class="paso-comillas">"</div>
+          <h3 class="paso-titulo">Martxan!</h3>
+          <p class="paso-texto">Hasi zure jarduera fisikoaren programa gure laguntzarekin.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NOLA HAS ZAITEZKE? ===== -->
+  <section id="acceso" class="acceso">
+    <div class="contenedor">
+      <h2 class="seccion-titulo">Nola has zaitezke zerbitzuan?</h2>
+      <div class="vias-acceso">
+        <div class="via via-principal">
+          <div class="via-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="13" cy="4" r="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 10l-3 3-3-3-3 5M15 10l2 4-2 7M9 14l-2 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="via-titulo">Norberaren ekimenez</h3>
+          <p class="via-texto">
+            Zuzenean jar zaitezke gurekin harremanetan. Gehiago mugitu nahi baduzu,
+            baina ez badakizu nola hasi, deitu.
+          </p>
+          <a href="https://wa.me/34637419418?text=Kaixo!%20Mobidurangori%20buruz%20informazio%20gehiago%20nahi%20dut."
+             class="boton-telefono" target="_blank" rel="noopener">
+            <span>
+              637 419 418
+              <small>WhatsApp / deia</small>
+            </span>
+            <span class="boton-telefono-flecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+        <div class="via via-secundaria">
+          <div class="via-icono" style="color: var(--magenta);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M9 12h6M12 9v6M4 6v10a4 4 0 004 4h8a4 4 0 004-4V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="via-titulo">Deribazio profesionalagatik</h3>
+          <p class="via-texto">
+            Zure konfiantza-zentroaren gomendio baten bidez ere sartu zaitezke.
+          </p>
+          <div class="logo-osakidetza">Osakidetza</div>
+          <div class="entidades">
+            <span class="entidad-chip">Gizarte Zerbitzuak</span>
+            <span class="entidad-chip">Osasun mentala</span>
+            <span class="entidad-chip">Andragunea</span>
+            <span class="entidad-chip">Fisioterapia</span>
+            <span class="entidad-chip">Erizaintza</span>
+            <span class="entidad-chip">Medikuntza</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EQUIPO ===== -->
+  <section id="equipo" class="equipo">
+    <div class="contenedor">
+      <h2 class="seccion-titulo">Zure gidariak<br>Mobidurangon</h2>
+      <div class="personas">
+        <div class="persona persona-magenta">
+          <div class="persona-foto">PU</div>
+          <h3 class="persona-nombre">Pello Uriarte</h3>
+          <div class="persona-separador"></div>
+          <p class="persona-titulacion">Jarduera Fisikoaren eta Kirolaren Zientzietan Graduatua</p>
+          <p class="persona-titulacion">Jarduera Fisikoko eta Kiroleko goi-mailako teknikaria</p>
+        </div>
+        <div class="persona persona-oscura">
+          <div class="persona-foto">IS</div>
+          <h3 class="persona-nombre">Imanol Sobrado</h3>
+          <div class="persona-separador"></div>
+          <p class="persona-titulacion">Jarduera Fisikoaren eta Kirolaren Zientzietan Graduatua</p>
+          <p class="persona-titulacion">Jarduera Fisikoko eta Kiroleko goi-mailako teknikaria</p>
+        </div>
+      </div>
+      <p class="equipo-cierre">Urratsez urrats zurekin, zure erritmora.</p>
+    </div>
+  </section>
+
+  <!-- ===== ACTIVIDADES ===== -->
+  <section id="jarduerak" class="actividades">
+    <div class="contenedor">
+      <h2 class="seccion-titulo">Gure jarduerak</h2>
+      <p class="actividades-intro">
+        Aktibo egoteko zure modua aurkitzen laguntzen dizugu.
+        Aukera bat edo batzuk aukeratu ditzakezu, eta elkarrekin egokituko dugu zure bidea.
+      </p>
+      <div class="grid-actividades">
+        <a href="#egutegia" class="actividad">
+          <div class="actividad-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M8 5h8M7 9h10M8 13h8M9 17h6M10 21h4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="actividad-categoria">Banakakoa</span>
+          <h3 class="actividad-titulo">David Health<br>gailuen programa</h3>
+          <p class="actividad-texto">Bizkar indartsu eta minik gabeko baterako. Banakako saioak gailu berezietan, jarraipen pertsonalizatuarekin.</p>
+          <span class="actividad-publico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Bizkarreko mina duten pertsonak
+          </span>
+        </a>
+        <a href="#egutegia" class="actividad">
+          <div class="actividad-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="actividad-categoria">Taldekoa</span>
+          <h3 class="actividad-titulo">KOI<br>gimnasia egokitua</h3>
+          <p class="actividad-texto">Mugikortasuna, oinarrizko indarra, kardio leuna, jolasak eta dinamikak. Talde-giro atseginean.</p>
+          <span class="actividad-publico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Helduentzat
+          </span>
+        </a>
+        <a href="#egutegia" class="actividad">
+          <div class="actividad-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="5" r="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 7v6M9 10l3-1 3 1M12 13l-2 8M12 13l2 8M16 9v14" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="actividad-categoria">Taldekoa</span>
+          <h3 class="actividad-titulo">KOI nagusien<br>egoitzan</h3>
+          <p class="actividad-texto">Ariketa errazak aulkian edo zutik. Mugikortasuna, indar leuna eta koordinazioa, amaieran bizikletarekin.</p>
+          <span class="actividad-publico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Adinekoak
+          </span>
+        </a>
+        <a href="#egutegia" class="actividad">
+          <div class="actividad-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="13" cy="4" r="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 10l-3 3-3-3-3 5M15 10l2 4-2 7M9 14l-2 7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="actividad-categoria">Kalean</span>
+          <h3 class="actividad-titulo">Ibilaldi<br>osasungarriak</h3>
+          <p class="actividad-texto">Ohitura sortu, erresistentzia hobetu eta ongizatea irabazi, lagunartean ibiliz. Irteera Kurutziagatik.</p>
+          <span class="actividad-publico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Edozein pertsonarentzat
+          </span>
+        </a>
+        <a href="#egutegia" class="actividad">
+          <div class="actividad-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l9 4v6c0 5-3.5 9.5-9 10-5.5-.5-9-5-9-10V6l9-4z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="actividad-categoria">Taldekoa</span>
+          <h3 class="actividad-titulo">Erorikoen<br>prebentzioa</h3>
+          <p class="actividad-texto">Oreka, indarra eta konfiantza hobetu, erortzeko arriskua murrizteko eta autonomia irabazteko.</p>
+          <span class="actividad-publico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Adinekoak edo mugimendu ziur gabe
+          </span>
+        </a>
+        <a href="#egutegia" class="actividad">
+          <div class="actividad-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="actividad-categoria">Pertsonalizatua</span>
+          <h3 class="actividad-titulo">Etxean<br>edo kanpoan</h3>
+          <p class="actividad-texto">Etxeko plan egokitua edo Durango Kirolak-era orientazioa: igerilekua, gimnasioa, zuzendutako eskolak...</p>
+          <span class="actividad-publico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ordutegi malguak behar dituztenak
+          </span>
+        </a>
+      </div>
+      <!-- ===== EGUTEGIA · Calendario en vivo desde Supabase ===== -->
+      <section class="egutegia-bloque" id="egutegia">
+        <header class="egutegia-cabecera">
+          <h2>Hurrengo ekitaldiak</h2>
+          <p>Próximos eventos · Programación actualizada</p>
+        </header>
+        <div id="egutegia-edukia">
+          <div class="egutegia-estado">Kargatzen… / Cargando…</div>
+        </div>
+        <div class="egutegia-cta">
+          <a href="egutegia.html" class="boton-egutegia-osoa">
+            Ekitaldi guztiak ikusi
+            <span class="boton-egutegia-osoa-flecha">→</span>
+          </a>
+          <p class="egutegia-cta-subtitulo">Ver todos los eventos · Iragazki eta egutegi osoa</p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ===== NON GAUDE? ===== -->
+  <section id="non-gaude" class="ubicacion">
+    <div class="ubicacion-grid">
+      <a href="https://www.google.com/maps/search/?api=1&query=Landako+Kalea+2,+48200+Durango,+Bizkaia"
+         class="mapa-visual" target="_blank" rel="noopener"
+         aria-label="Ireki Mobidurangoren kokapena Google Maps-en">
+        <svg class="mapa-fondo" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="400" fill="#E8F0E8"/>
+          <rect x="20"  y="30"  width="120" height="90"  fill="#D8D8D8" rx="4"/>
+          <rect x="160" y="30"  width="100" height="70"  fill="#D8D8D8" rx="4"/>
+          <rect x="280" y="30"  width="100" height="110" fill="#D8D8D8" rx="4"/>
+          <rect x="20"  y="160" width="100" height="80"  fill="#D8D8D8" rx="4"/>
+          <rect x="280" y="180" width="100" height="70"  fill="#D8D8D8" rx="4"/>
+          <rect x="20"  y="280" width="140" height="90"  fill="#D8D8D8" rx="4"/>
+          <rect x="250" y="290" width="130" height="90"  fill="#D8D8D8" rx="4"/>
+          <line x1="0" y1="140" x2="400" y2="140" stroke="#FFFFFF" stroke-width="14"/>
+          <line x1="0" y1="260" x2="400" y2="260" stroke="#FFFFFF" stroke-width="14"/>
+          <line x1="140" y1="0" x2="140" y2="400" stroke="#FFFFFF" stroke-width="12"/>
+          <line x1="260" y1="0" x2="260" y2="400" stroke="#FFFFFF" stroke-width="12"/>
+          <rect x="180" y="160" width="70" height="70" fill="#B8D8B8" rx="8"/>
+          <circle cx="200" cy="185" r="8" fill="#7AB87A"/>
+          <circle cx="225" cy="200" r="6" fill="#7AB87A"/>
+          <circle cx="210" cy="215" r="7" fill="#7AB87A"/>
+          <rect x="170" y="155" width="90" height="80" fill="#FDE6F2" stroke="#C6007E" stroke-width="2" rx="6" opacity="0.5"/>
+        </svg>
+        <div class="mapa-pin">
+          <svg class="mapa-pin-icono" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 12 8 12s8-6.75 8-12c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+          </svg>
+          <div class="mapa-pin-etiqueta">Landako 2</div>
+          <div class="mapa-pin-indicacion">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Sakatu Maps-en irekitzeko
+          </div>
+        </div>
+      </a>
+      <div class="ubicacion-info">
+        <div class="ubicacion-icono">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="ubicacion-titulo">Non gaude?</h2>
+        <div class="ubicacion-direccion">Landako 2</div>
+        <p class="ubicacion-detalle">
+          Kiroldegia · Igerilekuen gunea<br>
+          48200 Durango (Bizkaia)
+        </p>
+        <div class="ubicacion-aviso">
+          <strong>⚠️ Garrantzitsua</strong>
+          Hasierako elkarrizketa eta jarraipena gure bulegoan egiten dira.
+          Galdetzera pasa zaitezke, baina lehen elkarrizketa beti da aurretiko hitzorduarekin.
+        </div>
+        <a href="https://www.google.com/maps/dir/?api=1&destination=Landako+Kalea+2,+48200+Durango,+Bizkaia"
+           class="boton-mapa" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.553 2.776A1 1 0 0022 18.882V8.118a1 1 0 00-1.447-.894L15 10m0 7V10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Nola iritsi
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HARREMANETARAKO (contacto + QR) ===== -->
+  <section id="harremanetarako" class="contacto">
+    <div class="contacto-contenido">
+      <span class="contacto-eyebrow">Hasteko prest?</span>
+      <h2 class="contacto-titulo">Jarri gurekin<br>harremanetan</h2>
+      <p class="contacto-subtitulo">
+        Deitu, idatzi edo pasa zaitez gure bulegotik. Zure bidea hasiko dugu elkarrekin.
+      </p>
+      <div class="contacto-recordatorio">✓ Zerbitzu doakoa</div>
+      <div class="contacto-grid">
+        <div class="qr-bloque">
+          <h3 class="qr-titulo">Eskaneatu QR-a</h3>
+          <p class="qr-subtitulo">Eskaneatu zure sakelakoarekin WhatsApp irekitzeko</p>
+          <div class="qr-imagen">
+            <svg width="45mm" height="45mm" version="1.1" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM13,2H14V3H13zM14,2H15V3H14zM15,2H16V3H15zM16,2H17V3H16zM17,2H18V3H17zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM22,2H23V3H22zM25,2H26V3H25zM30,2H31V3H30zM33,2H34V3H33zM36,2H37V3H36zM37,2H38V3H37zM38,2H39V3H38zM39,2H40V3H39zM40,2H41V3H40zM41,2H42V3H41zM42,2H43V3H42zM2,3H3V4H2zM8,3H9V4H8zM16,3H17V4H16zM17,3H18V4H17zM18,3H19V4H18zM20,3H21V4H20zM24,3H25V4H24zM26,3H27V4H26zM29,3H30V4H29zM32,3H33V4H32zM34,3H35V4H34zM36,3H37V4H36zM42,3H43V4H42zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM10,4H11V5H10zM11,4H12V5H11zM12,4H13V5H12zM25,4H26V5H25zM26,4H27V5H26zM30,4H31V5H30zM34,4H35V5H34zM36,4H37V5H36zM38,4H39V5H38zM39,4H40V5H39zM40,4H41V5H40zM42,4H43V5H42zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM12,5H13V6H12zM13,5H14V6H13zM16,5H17V6H16zM18,5H19V6H18zM20,5H21V6H20zM23,5H24V6H23zM24,5H25V6H24zM25,5H26V6H25zM27,5H28V6H27zM28,5H29V6H28zM29,5H30V6H29zM31,5H32V6H31zM36,5H37V6H36zM38,5H39V6H38zM39,5H40V6H39zM40,5H41V6H40zM42,5H43V6H42zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM11,6H12V7H11zM12,6H13V7H12zM14,6H15V7H14zM15,6H16V7H15zM17,6H18V7H17zM21,6H22V7H21zM22,6H23V7H22zM23,6H24V7H23zM25,6H26V7H25zM27,6H28V7H27zM29,6H30V7H29zM30,6H31V7H30zM32,6H33V7H32zM33,6H34V7H33zM34,6H35V7H34zM36,6H37V7H36zM38,6H39V7H38zM39,6H40V7H39zM40,6H41V7H40zM42,6H43V7H42zM2,7H3V8H2zM8,7H9V8H8zM10,7H11V8H10zM11,7H12V8H11zM12,7H13V8H12zM13,7H14V8H13zM14,7H15V8H14zM15,7H16V8H15zM17,7H18V8H17zM18,7H19V8H18zM20,7H21V8H20zM22,7H23V8H22zM24,7H25V8H24zM26,7H27V8H26zM27,7H28V8H27zM28,7H29V8H28zM29,7H30V8H29zM31,7H32V8H31zM36,7H37V8H36zM42,7H43V8H42zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM26,8H27V9H26zM28,8H29V9H28zM30,8H31V9H30zM32,8H33V9H32zM34,8H35V9H34zM36,8H37V9H36zM37,8H38V9H37zM38,8H39V9H38zM39,8H40V9H39zM40,8H41V9H40zM41,8H42V9H41zM42,8H43V9H42zM10,9H11V10H10zM12,9H13V10H12zM13,9H14V10H13zM16,9H17V10H16zM17,9H18V10H17zM21,9H22V10H21zM22,9H23V10H22zM23,9H24V10H23zM24,9H25V10H24zM28,9H29V10H28zM29,9H30V10H29zM2,10H3V11H2zM4,10H5V11H4zM5,10H6V11H5zM6,10H7V11H6zM7,10H8V11H7zM8,10H9V11H8zM12,10H13V11H12zM13,10H14V11H13zM14,10H15V11H14zM16,10H17V11H16zM17,10H18V11H17zM19,10H20V11H19zM20,10H21V11H20zM22,10H23V11H22zM27,10H28V11H27zM29,10H30V11H29zM31,10H32V11H31zM33,10H34V11H33zM34,10H35V11H34zM36,10H37V11H36zM37,10H38V11H37zM38,10H39V11H38zM39,10H40V11H39zM40,10H41V11H40zM4,11H5V12H4zM5,11H6V12H5zM6,11H7V12H6zM7,11H8V12H7zM9,11H10V12H9zM10,11H11V12H10zM11,11H12V12H11zM14,11H15V12H14zM15,11H16V12H15zM16,11H17V12H16zM17,11H18V12H17zM19,11H20V12H19zM21,11H22V12H21zM23,11H24V12H23zM24,11H25V12H24zM25,11H26V12H25zM26,11H27V12H26zM27,11H28V12H27zM28,11H29V12H28zM31,11H32V12H31zM32,11H33V12H32zM33,11H34V12H33zM34,11H35V12H34zM36,11H37V12H36zM37,11H38V12H37zM38,11H39V12H38zM40,11H41V12H40zM41,11H42V12H41zM42,11H43V12H42zM2,12H3V13H2zM3,12H4V13H3zM5,12H6V13H5zM6,12H7V13H6zM8,12H9V13H8zM10,12H11V13H10zM11,12H12V13H11zM12,12H13V13H12zM15,12H16V13H15zM18,12H19V13H18zM19,12H20V13H19zM23,12H24V13H23zM24,12H25V13H24zM28,12H29V13H28zM29,12H30V13H29zM30,12H31V13H30zM31,12H32V13H31zM34,12H35V13H34zM37,12H38V13H37zM38,12H39V13H38zM2,13H3V14H2zM3,13H4V14H3zM5,13H6V14H5zM7,13H8V14H7zM9,13H10V14H9zM11,13H12V14H11zM13,13H14V14H13zM15,13H16V14H15zM16,13H17V14H16zM17,13H18V14H17zM18,13H19V14H18zM22,13H23V14H22zM23,13H24V14H23zM24,13H25V14H24zM25,13H26V14H25zM26,13H27V14H26zM28,13H29V14H28zM29,13H30V14H29zM30,13H31V14H30zM33,13H34V14H33zM34,13H35V14H34zM37,13H38V14H37zM38,13H39V14H38zM39,13H40V14H39zM2,14H3V15H2zM3,14H4V15H3zM7,14H8V15H7zM8,14H9V15H8zM10,14H11V15H10zM15,14H16V15H15zM17,14H18V15H17zM18,14H19V15H18zM19,14H20V15H19zM24,14H25V15H24zM26,14H27V15H26zM27,14H28V15H27zM28,14H29V15H28zM29,14H30V15H29zM30,14H31V15H30zM31,14H32V15H31zM32,14H33V15H32zM33,14H34V15H33zM35,14H36V15H35zM38,14H39V15H38zM39,14H40V15H39zM40,14H41V15H40zM41,14H42V15H41zM42,14H43V15H42zM3,15H4V16H3zM4,15H5V16H4zM5,15H6V16H5zM6,15H7V16H6zM7,15H8V16H7zM9,15H10V16H9zM14,15H15V16H14zM15,15H16V16H15zM22,15H23V16H22zM24,15H25V16H24zM26,15H27V16H26zM27,15H28V16H27zM32,15H33V16H32zM33,15H34V16H33zM34,15H35V16H34zM36,15H37V16H36zM37,15H38V16H37zM38,15H39V16H38zM39,15H40V16H39zM42,15H43V16H42zM2,16H3V17H2zM3,16H4V17H3zM6,16H7V17H6zM8,16H9V17H8zM9,16H10V17H9zM10,16H11V17H10zM16,16H17V17H16zM18,16H19V17H18zM19,16H20V17H19zM21,16H22V17H21zM23,16H24V17H23zM26,16H27V17H26zM27,16H28V17H27zM28,16H29V17H28zM29,16H30V17H29zM31,16H32V17H31zM32,16H33V17H32zM35,16H36V17H35zM37,16H38V17H37zM38,16H39V17H38zM39,16H40V17H39zM41,16H42V17H41zM4,17H5V18H4zM5,17H6V18H5zM6,17H7V18H6zM9,17H10V18H9zM10,17H11V18H10zM11,17H12V18H11zM12,17H13V18H12zM15,17H16V18H15zM17,17H18V18H17zM18,17H19V18H18zM21,17H22V18H21zM22,17H23V18H22zM23,17H24V18H23zM24,17H25V18H24zM25,17H26V18H25zM28,17H29V18H28zM32,17H33V18H32zM33,17H34V18H33zM34,17H35V18H34zM36,17H37V18H36zM37,17H38V18H37zM39,17H40V18H39zM4,18H5V19H4zM5,18H6V19H5zM6,18H7V19H6zM7,18H8V19H7zM8,18H9V19H8zM10,18H11V19H10zM11,18H12V19H11zM12,18H13V19H12zM15,18H16V19H15zM16,18H17V19H16zM17,18H18V19H17zM19,18H20V19H19zM21,18H22V19H21zM22,18H23V19H22zM24,18H25V19H24zM25,18H26V19H25zM27,18H28V19H27zM28,18H29V19H28zM29,18H30V19H29zM31,18H32V19H31zM32,18H33V19H32zM33,18H34V19H33zM35,18H36V19H35zM37,18H38V19H37zM39,18H40V19H39zM40,18H41V19H40zM2,19H3V20H2zM3,19H4V20H3zM5,19H6V20H5zM6,19H7V20H6zM10,19H11V20H10zM11,19H12V20H11zM12,19H13V20H12zM13,19H14V20H13zM19,19H20V20H19zM20,19H21V20H20zM21,19H22V20H21zM23,19H24V20H23zM25,19H26V20H25zM28,19H29V20H28zM30,19H31V20H30zM31,19H32V20H31zM33,19H34V20H33zM36,19H37V20H36zM37,19H38V20H37zM38,19H39V20H38zM41,19H42V20H41zM42,19H43V20H42zM2,20H3V21H2zM3,20H4V21H3zM8,20H9V21H8zM9,20H10V21H9zM10,20H11V21H10zM11,20H12V21H11zM14,20H15V21H14zM19,20H20V21H19zM23,20H24V21H23zM28,20H29V21H28zM29,20H30V21H29zM32,20H33V21H32zM35,20H36V21H35zM36,20H37V21H36zM38,20H39V21H38zM40,20H41V21H40zM2,21H3V22H2zM4,21H5V22H4zM6,21H7V22H6zM7,21H8V22H7zM9,21H10V22H9zM11,21H12V22H11zM12,21H13V22H12zM14,21H15V22H14zM15,21H16V22H15zM19,21H20V22H19zM20,21H21V22H20zM21,21H22V22H21zM23,21H24V22H23zM24,21H25V22H24zM26,21H27V22H26zM30,21H31V22H30zM32,21H33V22H32zM33,21H34V22H33zM36,21H37V22H36zM38,21H39V22H38zM41,21H42V22H41zM4,22H5V23H4zM8,22H9V23H8zM10,22H11V23H10zM14,22H15V23H14zM15,22H16V23H15zM16,22H17V23H16zM18,22H19V23H18zM23,22H24V23H23zM26,22H27V23H26zM27,22H28V23H27zM28,22H29V23H28zM30,22H31V23H30zM31,22H32V23H31zM33,22H34V23H33zM34,22H35V23H34zM39,22H40V23H39zM40,22H41V23H40zM3,23H4V24H3zM4,23H5V24H4zM5,23H6V24H5zM7,23H8V24H7zM9,23H10V24H9zM11,23H12V24H11zM14,23H15V24H14zM15,23H16V24H15zM16,23H17V24H16zM19,23H20V24H19zM20,23H21V24H20zM21,23H22V24H21zM22,23H23V24H22zM23,23H24V24H23zM24,23H25V24H24zM25,23H26V24H25zM28,23H29V24H28zM32,23H33V24H32zM33,23H34V24H33zM34,23H35V24H34zM35,23H36V24H35zM36,23H37V24H36zM38,23H39V24H38zM41,23H42V24H41zM42,23H43V24H42zM2,24H3V25H2zM3,24H4V25H3zM4,24H5V25H4zM5,24H6V25H5zM8,24H9V25H8zM9,24H10V25H9zM10,24H11V25H10zM12,24H13V25H12zM15,24H16V25H15zM18,24H19V25H18zM20,24H21V25H20zM23,24H24V25H23zM24,24H25V25H24zM27,24H28V25H27zM29,24H30V25H29zM32,24H33V25H32zM34,24H35V25H34zM35,24H36V25H35zM37,24H38V25H37zM39,24H40V25H39zM2,25H3V26H2zM6,25H7V26H6zM9,25H10V26H9zM11,25H12V26H11zM12,25H13V26H12zM13,25H14V26H13zM15,25H16V26H15zM17,25H18V26H17zM20,25H21V26H20zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM26,25H27V26H26zM28,25H29V26H28zM35,25H36V26H35zM36,25H37V26H36zM37,25H38V26H37zM39,25H40V26H39zM41,25H42V26H41zM42,25H43V26H42zM4,26H5V27H4zM8,26H9V27H8zM9,26H10V27H9zM12,26H13V27H12zM15,26H16V27H15zM16,26H17V27H16zM18,26H19V27H18zM19,26H20V27H19zM20,26H21V27H20zM21,26H22V27H21zM22,26H23V27H22zM25,26H26V27H25zM27,26H28V27H27zM29,26H30V27H29zM31,26H32V27H31zM32,26H33V27H32zM33,26H34V27H33zM37,26H38V27H37zM40,26H41V27H40zM41,26H42V27H41zM2,27H3V28H2zM4,27H5V28H4zM6,27H7V28H6zM11,27H12V28H11zM14,27H15V28H14zM15,27H16V28H15zM16,27H17V28H16zM21,27H22V28H21zM23,27H24V28H23zM24,27H25V28H24zM25,27H26V28H25zM26,27H27V28H26zM27,27H28V28H27zM28,27H29V28H28zM30,27H31V28H30zM32,27H33V28H32zM33,27H34V28H33zM36,27H37V28H36zM37,27H38V28H37zM38,27H39V28H38zM39,27H40V28H39zM41,27H42V28H41zM42,27H43V28H42zM2,28H3V29H2zM3,28H4V29H3zM5,28H6V29H5zM6,28H7V29H6zM8,28H9V29H8zM9,28H10V29H9zM10,28H11V29H10zM12,28H13V29H12zM15,28H16V29H15zM16,28H17V29H16zM19,28H20V29H19zM20,28H21V29H20zM22,28H23V29H22zM26,28H27V29H26zM27,28H28V29H27zM28,28H29V29H28zM29,28H30V29H29zM30,28H31V29H30zM32,28H33V29H32zM34,28H35V29H34zM35,28H36V29H35zM3,29H4V30H3zM7,29H8V30H7zM9,29H10V30H9zM12,29H13V30H12zM14,29H15V30H14zM16,29H17V30H16zM17,29H18V30H17zM20,29H21V30H20zM23,29H24V30H23zM25,29H26V30H25zM28,29H29V30H28zM29,29H30V30H29zM30,29H31V30H30zM33,29H34V30H33zM34,29H35V30H34zM35,29H36V30H35zM36,29H37V30H36zM38,29H39V30H38zM39,29H40V30H39zM41,29H42V30H41zM3,30H4V31H3zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM7,30H8V31H7zM8,30H9V31H8zM10,30H11V31H10zM14,30H15V31H14zM15,30H16V31H15zM16,30H17V31H16zM17,30H18V31H17zM18,30H19V31H18zM19,30H20V31H19zM21,30H22V31H21zM22,30H23V31H22zM24,30H25V31H24zM26,30H27V31H26zM27,30H28V31H27zM28,30H29V31H28zM30,30H31V31H30zM31,30H32V31H31zM32,30H33V31H32zM33,30H34V31H33zM35,30H36V31H35zM37,30H38V31H37zM39,30H40V31H39zM40,30H41V31H40zM41,30H42V31H41zM42,30H43V31H42zM2,31H3V32H2zM5,31H6V32H5zM6,31H7V32H6zM10,31H11V32H10zM13,31H14V32H13zM16,31H17V32H16zM17,31H18V32H17zM18,31H19V32H18zM20,31H21V32H20zM25,31H26V32H25zM26,31H27V32H26zM32,31H33V32H32zM33,31H34V32H33zM34,31H35V32H34zM36,31H37V32H36zM38,31H39V32H38zM40,31H41V32H40zM41,31H42V32H41zM42,31H43V32H42zM2,32H3V33H2zM7,32H8V33H7zM8,32H9V33H8zM9,32H10V33H9zM11,32H12V33H11zM13,32H14V33H13zM14,32H15V33H14zM22,32H23V33H22zM24,32H25V33H24zM26,32H27V33H26zM27,32H28V33H27zM29,32H30V33H29zM30,32H31V33H30zM32,32H33V33H32zM35,32H36V33H35zM36,32H37V33H36zM38,32H39V33H38zM41,32H42V33H41zM2,33H3V34H2zM10,33H11V34H10zM11,33H12V34H11zM12,33H13V34H12zM15,33H16V34H15zM16,33H17V34H16zM18,33H19V34H18zM23,33H24V34H23zM24,33H25V34H24zM29,33H30V34H29zM30,33H31V34H30zM32,33H33V34H32zM35,33H36V34H35zM36,33H37V34H36zM37,33H38V34H37zM38,33H39V34H38zM39,33H40V34H39zM2,34H3V35H2zM6,34H7V35H6zM8,34H9V35H8zM10,34H11V35H10zM12,34H13V35H12zM13,34H14V35H13zM14,34H15V35H14zM16,34H17V35H16zM17,34H18V35H17zM19,34H20V35H19zM22,34H23V35H22zM26,34H27V35H26zM27,34H28V35H27zM28,34H29V35H28zM29,34H30V35H29zM31,34H32V35H31zM34,34H35V35H34zM35,34H36V35H35zM36,34H37V35H36zM37,34H38V35H37zM38,34H39V35H38zM39,34H40V35H39zM40,34H41V35H40zM41,34H42V35H41zM42,34H43V35H42zM10,35H11V36H10zM12,35H13V36H12zM17,35H18V36H17zM18,35H19V36H18zM20,35H21V36H20zM21,35H22V36H21zM25,35H26V36H25zM30,35H31V36H30zM31,35H32V36H31zM32,35H33V36H32zM33,35H34V36H33zM34,35H35V36H34zM38,35H39V36H38zM42,35H43V36H42zM2,36H3V37H2zM3,36H4V37H3zM4,36H5V37H4zM5,36H6V37H5zM6,36H7V37H6zM7,36H8V37H7zM8,36H9V37H8zM11,36H12V37H11zM14,36H15V37H14zM15,36H16V37H15zM16,36H17V37H16zM18,36H19V37H18zM20,36H21V37H20zM22,36H23V37H22zM24,36H25V37H24zM28,36H29V37H28zM29,36H30V37H29zM30,36H31V37H30zM32,36H33V37H32zM33,36H34V37H33zM34,36H35V37H34zM36,36H37V37H36zM38,36H39V37H38zM2,37H3V38H2zM8,37H9V38H8zM10,37H11V38H10zM12,37H13V38H12zM16,37H17V38H16zM17,37H18V38H17zM18,37H19V38H18zM22,37H23V38H22zM28,37H29V38H28zM29,37H30V38H29zM33,37H34V38H33zM34,37H35V38H34zM38,37H39V38H38zM39,37H40V38H39zM42,37H43V38H42zM2,38H3V39H2zM4,38H5V39H4zM5,38H6V39H5zM6,38H7V39H6zM8,38H9V39H8zM10,38H11V39H10zM11,38H12V39H11zM13,38H14V39H13zM14,38H15V39H14zM15,38H16V39H15zM17,38H18V39H17zM18,38H19V39H18zM20,38H21V39H20zM23,38H24V39H23zM24,38H25V39H24zM25,38H26V39H25zM26,38H27V39H26zM27,38H28V39H27zM28,38H29V39H28zM30,38H31V39H30zM31,38H32V39H31zM32,38H33V39H32zM34,38H35V39H34zM35,38H36V39H35zM36,38H37V39H36zM37,38H38V39H37zM38,38H39V39H38zM40,38H41V39H40zM42,38H43V39H42zM2,39H3V40H2zM4,39H5V40H4zM5,39H6V40H5zM6,39H7V40H6zM8,39H9V40H8zM10,39H11V40H10zM14,39H15V40H14zM16,39H17V40H16zM21,39H22V40H21zM22,39H23V40H22zM23,39H24V40H23zM25,39H26V40H25zM28,39H29V40H28zM31,39H32V40H31zM32,39H33V40H32zM33,39H34V40H33zM35,39H36V40H35zM37,39H38V40H37zM39,39H40V40H39zM41,39H42V40H41zM42,39H43V40H42zM2,40H3V41H2zM4,40H5V41H4zM5,40H6V41H5zM6,40H7V41H6zM8,40H9V41H8zM10,40H11V41H10zM15,40H16V41H15zM16,40H17V41H16zM18,40H19V41H18zM19,40H20V41H19zM22,40H23V41H22zM23,40H24V41H23zM26,40H27V41H26zM28,40H29V41H28zM29,40H30V41H29zM30,40H31V41H30zM31,40H32V41H31zM33,40H34V41H33zM35,40H36V41H35zM36,40H37V41H36zM37,40H38V41H37zM38,40H39V41H38zM39,40H40V41H39zM40,40H41V41H40zM2,41H3V42H2zM8,41H9V42H8zM13,41H14V42H13zM14,41H15V42H14zM15,41H16V42H15zM18,41H19V42H18zM19,41H20V42H19zM20,41H21V42H20zM23,41H24V42H23zM24,41H25V42H24zM25,41H26V42H25zM26,41H27V42H26zM29,41H30V42H29zM30,41H31V42H30zM32,41H33V42H32zM34,41H35V42H34zM35,41H36V42H35zM38,41H39V42H38zM39,41H40V42H39zM41,41H42V42H41zM2,42H3V43H2zM3,42H4V43H3zM4,42H5V43H4zM5,42H6V43H5zM6,42H7V43H6zM7,42H8V43H7zM8,42H9V43H8zM10,42H11V43H10zM13,42H14V43H13zM15,42H16V43H15zM18,42H19V43H18zM20,42H21V43H20zM22,42H23V43H22zM27,42H28V43H27zM29,42H30V43H29zM31,42H32V43H31zM33,42H34V43H33zM37,42H38V43H37zM38,42H39V43H38zM40,42H41V43H40z" fill="#000000"/></svg>
+          </div>
+          <span class="qr-leyenda">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            WhatsApp-era birbideratuko zaitu
+          </span>
+        </div>
+        <div class="contacto-cards">
+          <a href="https://wa.me/34637419418?text=Kaixo!%20Mobidurangori%20buruz%20informazio%20gehiago%20nahi%20dut."
+             class="contacto-card contacto-card-whatsapp" target="_blank" rel="noopener">
+            <div class="contacto-card-icono">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+            </div>
+            <div class="contacto-card-texto">
+              <span class="contacto-card-label">WhatsApp · Mezu zuzena</span>
+              <span class="contacto-card-valor">637 419 418</span>
+            </div>
+            <div class="contacto-card-flecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </a>
+          <a href="tel:+34637419418" class="contacto-card">
+            <div class="contacto-card-icono">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="contacto-card-texto">
+              <span class="contacto-card-label">Telefonoa · Deitu</span>
+              <span class="contacto-card-valor">637 419 418</span>
+            </div>
+            <div class="contacto-card-flecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </a>
+          <a href="mailto:mobidurango@durango.eus" class="contacto-card">
+            <div class="contacto-card-icono">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline points="22,6 12,13 2,6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="contacto-card-texto">
+              <span class="contacto-card-label">Emaila</span>
+              <span class="contacto-card-valor">mobidurango@durango.eus</span>
+            </div>
+            <div class="contacto-card-flecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </a>
+          <a href="#non-gaude" class="contacto-card">
+            <div class="contacto-card-icono">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="contacto-card-texto">
+              <span class="contacto-card-label">Bulegoa</span>
+              <span class="contacto-card-valor">Landako 2 (Kiroldegia)</span>
+            </div>
+            <div class="contacto-card-flecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       FOOTER (nuevo)
+       ======================================================== -->
+  <footer>
+    <div class="footer-contenedor">
+
+      <!-- ===== LOGOS COLABORADORES ===== -->
+      <div class="footer-colaboradores">
+        <p class="footer-colaboradores-titulo">Lankidetzan egindako zerbitzua</p>
+        <div class="footer-logos">
+          <!-- De momento logos como texto. Cuando tengamos los oficiales, sustituir por <img>. -->
+          <div class="footer-logo">Durango Kirolak</div>
+          <div class="footer-logo">Durango Udala</div>
+          <div class="footer-logo">Osakidetza</div>
+          <div class="footer-logo">Mugiment</div>
+          <div class="footer-logo">Athlon</div>
+        </div>
+      </div>
+
+      <!-- ===== 4 COLUMNAS DE INFO ===== -->
+      <div class="footer-columnas">
+
+        <!-- Columna 1: marca + descripción + redes -->
+        <div class="footer-columna">
+          <div class="footer-marca-logo">mobidurango</div>
+          <p class="footer-marca-descripcion">
+            Durangoko doako orientazio eta laguntza zerbitzua jarduera fisikoan.
+            Aktiboagoa izan zaitezen, urratsez urrats.
+          </p>
+          <div class="footer-redes">
+            <!-- Placeholder. Cuando haya cuentas oficiales, sustituir href. -->
+            <a href="#" class="footer-red" aria-label="Facebook" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer-red" aria-label="Instagram" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer-red" aria-label="Twitter" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna 2: enlaces rápidos -->
+        <div class="footer-columna">
+          <h4>Sekzioak</h4>
+          <ul class="footer-lista">
+            <li><a href="#que-es">Zer da Mobidurango</a></li>
+            <li><a href="#como-funciona">Nola funtzionatzen du</a></li>
+            <li><a href="#jarduerak">Jarduerak</a></li>
+            <li><a href="#equipo">Taldea</a></li>
+            <li><a href="#non-gaude">Non gaude</a></li>
+            <li><a href="#harremanetarako">Harremanetarako</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: contacto -->
+        <div class="footer-columna">
+          <h4>Harremanetarako</h4>
+
+          <div class="footer-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <a href="tel:+34637419418">637 419 418</a>
+          </div>
+
+          <div class="footer-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="22,6 12,13 2,6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <a href="mailto:mobidurango@durango.eus">mobidurango@durango.eus</a>
+          </div>
+
+          <div class="footer-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Landako 2<br>48200 Durango</span>
+          </div>
+        </div>
+
+        <!-- Columna 4: horario -->
+        <div class="footer-columna">
+          <h4>Ordutegia</h4>
+
+          <div class="footer-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="12,6 12,12 16,14" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>
+              Astelehenetik ostiralera<br>
+              <strong style="color: var(--blanco);">8:00 – 18:00</strong>
+            </span>
+          </div>
+
+          <div class="footer-info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Hasierako elkarrizketa<br>aurretiko hitzorduarekin</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== ZONA INFERIOR: COPYRIGHT + LEGAL ===== -->
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          © 2026 Mobidurango · Durangoko Udalaren zerbitzua
+        </div>
+        <div class="footer-legal">
+          <a href="https://www.durango.eus/eu/pribatutasun-politika" target="_blank" rel="noopener">Pribatutasun politika</a>
+          <a href="#">Lege oharra</a>
+          <a href="#">Irisgarritasuna</a>
+          <a href="#">Cookieak</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ===== EGUTEGIA · Script de carga desde Supabase ===== -->
+  <script>
+    (function() {
+      const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
+
+      async function cargarEventos() {
+        const contenedor = document.getElementById('egutegia-edukia');
+        if (!contenedor) return;
+
+        const params = new URLSearchParams({
+          select: 'id,titulo_eu,titulo_es,fecha_inicio,fecha_fin,lugar,organizador',
+          published: 'eq.true',
+          estado: 'eq.publicado',
+          tipo: 'eq.puntual',
+          order: 'fecha_inicio.asc',
+          limit: '3'
+        });
+
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        params.append('fecha_inicio', `gte.${hoy.toISOString()}`);
+
+        const url = `${SUPABASE_URL}/rest/v1/eventos?${params}`;
+
+        try {
+          const r = await fetch(url, {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          const eventos = await r.json();
+
+          if (!Array.isArray(eventos) || eventos.length === 0) {
+            contenedor.innerHTML =
+              '<div class="egutegia-estado">Une honetan ez dago programatutako ekitaldirik.<br><small>No hay eventos programados en este momento.</small></div>';
+            return;
+          }
+
+          contenedor.innerHTML =
+            '<div class="egutegia-lista">' + eventos.map(pintarEvento).join('') + '</div>';
+        } catch (err) {
+          contenedor.innerHTML =
+            `<div class="egutegia-estado error"><strong>Errorea kargatzean / Error al cargar</strong><br><small>${escapar(err.message)}</small></div>`;
+          console.error('[Mobidurango egutegia]', err);
+        }
+      }
+
+      function pintarEvento(ev) {
+        const fecha = new Date(ev.fecha_inicio);
+        const dia = fecha.getDate();
+        const mes = fecha.toLocaleDateString('eu', { month: 'short' }).replace('.', '');
+        const asteguna = fecha.toLocaleDateString('eu', { weekday: 'short' }).replace('.', '');
+        const hora = fecha.toLocaleTimeString('eu', { hour: '2-digit', minute: '2-digit' });
+        return `
+          <article class="ekitaldia">
+            <div class="ekitaldia-data">
+              <div class="eguna">${dia}</div>
+              <div class="hilabetea">${escapar(mes)}</div>
+              <div class="asteguna">${escapar(asteguna)}</div>
+            </div>
+            <div class="ekitaldia-gorputza">
+              <h3>${escapar(ev.titulo_eu || ev.titulo_es || '')}</h3>
+              <div class="ekitaldia-meta">
+                <span class="ordua">${escapar(hora)}</span>
+                <span>${escapar(ev.lugar || '')}</span>
+                <span class="antolatzailea">${escapar(ev.organizador || '')}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      function escapar(t) {
+        if (t == null) return '';
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', cargarEventos);
+      } else {
+        cargarEventos();
+      }
+    })();
+  </script>
+
+</body>
+</html>

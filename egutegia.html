@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobidurango · Egutegi osoa</title>
+  <meta name="description" content="Mobidurango egutegi osoa. Durangaldeko jarduera fisikoaren ekitaldi guztiak. Calendario completo de actividad física en Durangaldea.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       Identidad visual Mobidurango
+       ========================================================= */
+    :root {
+      --magenta: #C6007E;
+      --magenta-oscuro: #9E0065;
+      --magenta-claro: #FDE6F2;
+      --amarillo: #FFD500;
+      --gris-texto: #2A2A2A;
+      --gris-suave: #666666;
+      --gris-claro: #F5F5F5;
+      --gris-medio: #E5E5E5;
+      --blanco: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--gris-texto);
+      line-height: 1.6;
+      background: var(--gris-claro);
+    }
+
+    /* ========== CABECERA ========== */
+    .cabecera {
+      background: var(--blanco);
+      border-bottom: 4px solid var(--magenta);
+      padding: 16px 24px;
+    }
+
+    .cabecera-contenido {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cabecera-marca {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cabecera-marca .logo {
+      width: 44px;
+      height: 44px;
+      background: var(--magenta);
+      color: var(--blanco);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.2rem;
+    }
+
+    .cabecera-marca h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.2rem;
+      color: var(--magenta);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .cabecera-marca .subtitulo-marca {
+      font-size: 0.78rem;
+      color: var(--gris-suave);
+      margin-top: 2px;
+    }
+
+    .volver {
+      font-size: 0.9rem;
+      color: var(--magenta);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 24px;
+      transition: background 0.15s;
+    }
+
+    .volver:hover {
+      background: var(--magenta-claro);
+    }
+
+    /* ========== TÍTULO PÁGINA ========== */
+    .titulo-pagina {
+      max-width: 1100px;
+      margin: 32px auto 16px;
+      padding: 0 24px;
+    }
+
+    .titulo-pagina h2 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 2rem;
+      color: var(--gris-texto);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .titulo-pagina p {
+      color: var(--gris-suave);
+      margin-top: 6px;
+      font-size: 1rem;
+    }
+
+    /* ========== FILTROS ========== */
+    .filtros {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+
+    .filtro-grupo {
+      background: var(--blanco);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .filtro-titulo {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gris-suave);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .filtro-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: var(--gris-claro);
+      color: var(--gris-texto);
+      border: 1.5px solid transparent;
+      border-radius: 24px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .chip:hover {
+      border-color: var(--magenta);
+    }
+
+    .chip.activo {
+      background: var(--magenta);
+      color: var(--blanco);
+      border-color: var(--magenta);
+    }
+
+    .filtros-acciones {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+    }
+
+    .btn-limpiar {
+      background: transparent;
+      border: none;
+      color: var(--magenta);
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 4px 8px;
+    }
+
+    .btn-limpiar:hover { text-decoration: underline; }
+
+    .btn-limpiar:disabled {
+      color: var(--gris-suave);
+      cursor: default;
+      text-decoration: none;
+    }
+
+    /* ========== LISTA DE EVENTOS ========== */
+    .egutegia-lista-contenedor {
+      max-width: 1100px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+
+    .egutegia-estado {
+      background: var(--blanco);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--gris-suave);
+    }
+
+    .egutegia-estado.error {
+      color: var(--magenta-oscuro);
+      background: var(--magenta-claro);
+    }
+
+    .egutegia-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ekitaldia {
+      display: flex;
+      gap: 18px;
+      align-items: stretch;
+      background: var(--blanco);
+      border: 1px solid var(--gris-medio);
+      border-radius: 12px;
+      padding: 18px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .ekitaldia:hover {
+      border-color: var(--magenta);
+      transform: translateY(-1px);
+    }
+
+    .ekitaldia-data {
+      flex-shrink: 0;
+      width: 84px;
+      background: var(--magenta);
+      color: var(--blanco);
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ekitaldia-data .eguna {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .ekitaldia-data .hilabetea {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .ekitaldia-data .asteguna {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 6px;
+      opacity: 0.85;
+    }
+
+    .ekitaldia-gorputza {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ekitaldia-gorputza h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gris-texto);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .ekitaldia-detalle {
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .ekitaldia-meta {
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      align-items: center;
+    }
+
+    .ekitaldia-meta .ordua {
+      color: var(--magenta);
+      font-weight: 600;
+    }
+
+    .ekitaldia-meta .lugar {
+      color: var(--gris-texto);
+    }
+
+    .ekitaldia-meta .chip-meta {
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .chip-organizador {
+      background: var(--magenta-claro);
+      color: var(--magenta-oscuro);
+    }
+
+    .chip-poblacion {
+      background: var(--gris-claro);
+      color: var(--gris-texto);
+      border: 1px solid var(--gris-medio);
+    }
+
+    .resultados-contador {
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+      margin-bottom: 12px;
+    }
+
+    /* ========== FOOTER ========== */
+    .pie {
+      background: var(--blanco);
+      border-top: 1px solid var(--gris-medio);
+      padding: 24px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--gris-suave);
+    }
+
+    /* ========== MÓVIL ========== */
+    @media (max-width: 600px) {
+      .titulo-pagina h2 { font-size: 1.5rem; }
+      .ekitaldia { padding: 14px; gap: 14px; }
+      .ekitaldia-data { width: 68px; }
+      .ekitaldia-data .eguna { font-size: 1.6rem; }
+      .ekitaldia-gorputza h3 { font-size: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========== CABECERA ========== -->
+  <header class="cabecera">
+    <div class="cabecera-contenido">
+      <div class="cabecera-marca">
+        <div class="logo">M</div>
+        <div>
+          <h1>Mobidurango</h1>
+          <div class="subtitulo-marca">Egutegi osoa · Calendario completo</div>
+        </div>
+      </div>
+      <a href="mobidurango-eu.html" class="volver">
+        ← Mobidurango orrira itzuli
+      </a>
+    </div>
+  </header>
+
+  <!-- ========== TÍTULO ========== -->
+  <div class="titulo-pagina">
+    <h2>Hurrengo ekitaldiak</h2>
+    <p>Durangaldean programatutako jarduera fisikoaren ekitaldi guztiak.<br>
+       Todos los eventos de actividad física programados en Durangaldea.</p>
+  </div>
+
+  <!-- ========== FILTROS ========== -->
+  <div class="filtros" id="filtros">
+    <!-- Los filtros se generan dinámicamente con JS -->
+  </div>
+
+  <!-- ========== LISTA ========== -->
+  <main class="egutegia-lista-contenedor">
+    <div id="resultados-contador" class="resultados-contador" style="display:none;"></div>
+    <div id="egutegia-edukia">
+      <div class="egutegia-estado">Kargatzen… / Cargando…</div>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="pie">
+    <p>© 2026 Mobidurango · Durangoko Udalaren zerbitzua</p>
+  </footer>
+
+
+  <!-- =========================================================
+       SCRIPT DEL CALENDARIO
+       ========================================================= -->
+  <script>
+    (function() {
+
+      // -------- Configuración --------
+      const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
+
+      // Mapa de slugs (BD) → nombres mostrados (con tildes y eñes)
+      const POBLACIONES_MAP = {
+        'durango':  'Durango',
+        'abadino':  'Abadiño',
+        'atxondo':  'Atxondo',
+        'berriz':   'Berriz',
+        'elorrio':  'Elorrio',
+        'ermua':    'Ermua',
+        'garai':    'Garai',
+        'iurreta':  'Iurreta',
+        'izurtza':  'Izurtza',
+        'mallabia': 'Mallabia',
+        'manaria':  'Mañaria',
+        'zaldibar': 'Zaldibar',
+        'otros':    'Otros / Beste batzuk'
+      };
+
+      // -------- Estado de la app --------
+      let todosEventos = [];
+      const filtrosActivos = {
+        organizador: new Set(),
+        poblacion: new Set()
+      };
+
+      // -------- Carga inicial --------
+      async function cargar() {
+        const contenedor = document.getElementById('egutegia-edukia');
+
+        const params = new URLSearchParams({
+          select: 'id,titulo_eu,titulo_es,detalle_eu,detalle_es,fecha_inicio,fecha_fin,lugar,organizador,poblacion',
+          published: 'eq.true',
+          estado: 'eq.publicado',
+          tipo: 'eq.puntual',
+          order: 'fecha_inicio.asc'
+        });
+
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        params.append('fecha_inicio', `gte.${hoy.toISOString()}`);
+
+        const url = `${SUPABASE_URL}/rest/v1/eventos?${params}`;
+
+        try {
+          const r = await fetch(url, {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+
+          todosEventos = await r.json();
+
+          if (!Array.isArray(todosEventos) || todosEventos.length === 0) {
+            contenedor.innerHTML =
+              '<div class="egutegia-estado">Une honetan ez dago programatutako ekitaldirik.<br><small>No hay eventos programados en este momento.</small></div>';
+            return;
+          }
+
+          construirFiltros();
+          render();
+
+        } catch (err) {
+          contenedor.innerHTML =
+            `<div class="egutegia-estado error">
+               <strong>Errorea kargatzean / Error al cargar</strong><br>
+               <small>${escapar(err.message)}</small>
+             </div>`;
+          console.error('[Mobidurango egutegia]', err);
+        }
+      }
+
+      // -------- Construir chips de filtro dinámicamente --------
+      function construirFiltros() {
+        const cont = document.getElementById('filtros');
+
+        // Recoger valores únicos que realmente aparecen en los datos
+        const organizadoresSet = new Set();
+        const poblacionesSet = new Set();
+        todosEventos.forEach(ev => {
+          if (ev.organizador) organizadoresSet.add(ev.organizador);
+          if (ev.poblacion) poblacionesSet.add(ev.poblacion);
+        });
+
+        const organizadores = [...organizadoresSet].sort();
+        const poblaciones = [...poblacionesSet].sort();
+
+        cont.innerHTML = `
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Herria / Población</div>
+            <div class="filtro-chips" id="chips-poblacion">
+              ${poblaciones.map(p => `
+                <button class="chip" data-tipo="poblacion" data-valor="${escapar(p)}">${escapar(POBLACIONES_MAP[p] || p)}</button>
+              `).join('')}
+            </div>
+          </div>
+          <div class="filtro-grupo">
+            <div class="filtro-titulo">Antolatzailea / Organizador</div>
+            <div class="filtro-chips" id="chips-organizador">
+              ${organizadores.map(o => `
+                <button class="chip" data-tipo="organizador" data-valor="${escapar(o)}">${escapar(o)}</button>
+              `).join('')}
+            </div>
+            <div class="filtros-acciones">
+              <span></span>
+              <button class="btn-limpiar" id="btn-limpiar" disabled>
+                Garbitu iragazkiak / Limpiar filtros
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Listeners
+        cont.querySelectorAll('.chip').forEach(chip => {
+          chip.addEventListener('click', () => toggleChip(chip));
+        });
+        document.getElementById('btn-limpiar').addEventListener('click', limpiar);
+      }
+
+      // -------- Manejo de toggles de chip --------
+      function toggleChip(chip) {
+        const tipo = chip.dataset.tipo;
+        const valor = chip.dataset.valor;
+        const set = filtrosActivos[tipo];
+
+        if (set.has(valor)) {
+          set.delete(valor);
+          chip.classList.remove('activo');
+        } else {
+          set.add(valor);
+          chip.classList.add('activo');
+        }
+
+        actualizarBotonLimpiar();
+        render();
+      }
+
+      function limpiar() {
+        filtrosActivos.organizador.clear();
+        filtrosActivos.poblacion.clear();
+        document.querySelectorAll('.chip.activo').forEach(c => c.classList.remove('activo'));
+        actualizarBotonLimpiar();
+        render();
+      }
+
+      function actualizarBotonLimpiar() {
+        const btn = document.getElementById('btn-limpiar');
+        const hayActivos = filtrosActivos.organizador.size > 0 || filtrosActivos.poblacion.size > 0;
+        btn.disabled = !hayActivos;
+      }
+
+      // -------- Aplicar filtros y pintar lista --------
+      function render() {
+        const filtrados = todosEventos.filter(ev => {
+          if (filtrosActivos.organizador.size > 0 && !filtrosActivos.organizador.has(ev.organizador)) {
+            return false;
+          }
+          if (filtrosActivos.poblacion.size > 0 && !filtrosActivos.poblacion.has(ev.poblacion)) {
+            return false;
+          }
+          return true;
+        });
+
+        const cont = document.getElementById('egutegia-edukia');
+        const contador = document.getElementById('resultados-contador');
+
+        // Mostrar contador solo si hay filtros activos
+        if (filtrosActivos.organizador.size > 0 || filtrosActivos.poblacion.size > 0) {
+          contador.style.display = 'block';
+          contador.textContent = `${filtrados.length} ekitaldi / ${filtrados.length} eventos`;
+        } else {
+          contador.style.display = 'none';
+        }
+
+        if (filtrados.length === 0) {
+          cont.innerHTML =
+            '<div class="egutegia-estado">Iragazki horiekin ez dago bat datorren ekitaldirik.<br><small>No hay eventos que coincidan con estos filtros.</small></div>';
+          return;
+        }
+
+        cont.innerHTML =
+          '<div class="egutegia-lista">' + filtrados.map(pintarEvento).join('') + '</div>';
+      }
+
+      // -------- Pintar tarjeta de evento --------
+      function pintarEvento(ev) {
+        const fecha = new Date(ev.fecha_inicio);
+        const dia = fecha.getDate();
+        const mes = fecha.toLocaleDateString('eu', { month: 'short' }).replace('.', '');
+        const asteguna = fecha.toLocaleDateString('eu', { weekday: 'short' }).replace('.', '');
+        const hora = fecha.toLocaleTimeString('eu', { hour: '2-digit', minute: '2-digit' });
+
+        const detalle = ev.detalle_eu || ev.detalle_es || '';
+        const detalleHtml = detalle ? `<div class="ekitaldia-detalle">${escapar(detalle)}</div>` : '';
+
+        const poblacionTexto = ev.poblacion ? (POBLACIONES_MAP[ev.poblacion] || ev.poblacion) : '';
+
+        return `
+          <article class="ekitaldia">
+            <div class="ekitaldia-data">
+              <div class="eguna">${dia}</div>
+              <div class="hilabetea">${escapar(mes)}</div>
+              <div class="asteguna">${escapar(asteguna)}</div>
+            </div>
+            <div class="ekitaldia-gorputza">
+              <h3>${escapar(ev.titulo_eu || ev.titulo_es || '')}</h3>
+              ${detalleHtml}
+              <div class="ekitaldia-meta">
+                <span class="ordua">${escapar(hora)}</span>
+                ${ev.lugar ? `<span class="lugar">${escapar(ev.lugar)}</span>` : ''}
+                ${poblacionTexto ? `<span class="chip-meta chip-poblacion">${escapar(poblacionTexto)}</span>` : ''}
+                ${ev.organizador ? `<span class="chip-meta chip-organizador">${escapar(ev.organizador)}</span>` : ''}
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      // -------- Util: escapar HTML --------
+      function escapar(t) {
+        if (t == null) return '';
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      // -------- Arranque --------
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', cargar);
+      } else {
+        cargar();
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
