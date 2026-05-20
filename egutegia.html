@@ -915,6 +915,10 @@
       const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
       const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
 
+      // Dominio público del sitio (usado en los textos compartidos por WhatsApp / portapapeles).
+      // Si en el futuro cambia el dominio, actualizar AQUÍ (única fuente de verdad en este archivo).
+      const SITIO_URL = 'https://mobidurango.kirolkudeaketa.com';
+
       // Diccionario de traducciones de la propia interfaz
       // Los datos de eventos vienen de Supabase ya bilingües (titulo_eu, titulo_es, etc.)
       const I18N = {
@@ -1489,10 +1493,10 @@
           (lugarCompartir ? `📍 ${lugarCompartir}\n` : '') +
           (organizadorCompartir ? `👥 ${organizadorCompartir}\n` : '') +
           (detalle ? `\n${detalle}\n` : '') +
-          `\n🌐 https://mobidurango.vercel.app/egutegia.html`;
+          `\n🌐 ${SITIO_URL}/egutegia.html`;
 
         const textoEscapado = escapar(textoCompartir);
-        const enlaceCalendario = 'https://mobidurango.vercel.app/egutegia.html';
+        const enlaceCalendario = `${SITIO_URL}/egutegia.html`;
 
         return `
           <article class="ekitaldia">
