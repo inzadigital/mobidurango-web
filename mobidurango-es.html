@@ -1299,7 +1299,7 @@
       transition: transform 0.2s ease;
     }
     .footer-logo:hover { transform: translateY(-2px); }
-    .footer-logo img { max-height: 36px; width: auto; display: block; }
+    .footer-logo img { max-height: 36px; max-width: 110px; width: auto; object-fit: contain; display: block; }
     .footer-logo span {
       font-family: 'Archivo Black', sans-serif;
       font-size: 14px;
@@ -1498,7 +1498,7 @@
       }
       .footer-logos { gap: 10px; }
       .footer-logo { height: 54px; padding: 10px 16px; }
-      .footer-logo img { max-height: 30px; }
+      .footer-logo img { max-height: 30px; max-width: 90px; }
     }
 
     @media (max-width: 600px) {
@@ -2264,9 +2264,6 @@
           <div class="footer-logo"><img src="img/logo-durango.png" alt="Durango"></div>
           <div class="footer-logo"><img src="img/logo-osakidetza.png" alt="Osakidetza"></div>
           <div class="footer-logo"><img src="img/logo-mugiment.png" alt="Mugiment"></div>
-          <div class="footer-logo"><span>Andragune</span></div>
-          <div class="footer-logo"><span>Nagusien Etxea</span></div>
-          <div class="footer-logo"><span>Athlon</span></div>
         </div>
       </div>
 
