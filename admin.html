@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mobidurango · Kudeaketa panela</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* =========================================================
+       Identidad visual Mobidurango (misma paleta que egutegia.html)
+       ========================================================= */
+    :root {
+      --magenta: #C6007E;
+      --magenta-oscuro: #9E0065;
+      --magenta-claro: #FDE6F2;
+      --amarillo: #FFD500;
+      --verde: #1E8E5A;
+      --verde-claro: #E6F5EE;
+      --rojo: #C6301E;
+      --rojo-claro: #FBEAE7;
+      --gris-texto: #2A2A2A;
+      --gris-suave: #666666;
+      --gris-claro: #F5F5F5;
+      --gris-medio: #E5E5E5;
+      --blanco: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--gris-texto);
+      line-height: 1.5;
+      background: var(--gris-claro);
+      min-height: 100vh;
+    }
+
+    /* ========== CABECERA ========== */
+    .cabecera {
+      background: var(--blanco);
+      border-bottom: 4px solid var(--magenta);
+      padding: 16px 24px;
+    }
+    .cabecera-contenido {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cabecera-marca { display: flex; align-items: center; gap: 12px; }
+    .cabecera-marca .logo {
+      width: 44px; height: 44px;
+      background: var(--magenta); color: var(--blanco);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif; font-size: 1.2rem;
+    }
+    .cabecera-marca h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.2rem; color: var(--magenta);
+      text-transform: uppercase; letter-spacing: -0.01em; line-height: 1;
+    }
+    .cabecera-marca .subtitulo-marca { font-size: 0.78rem; color: var(--gris-suave); margin-top: 2px; }
+
+    .cabecera-acciones { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .idioma-toggle {
+      display: inline-flex; align-items: center;
+      background: var(--gris-claro); border: 1px solid var(--gris-medio);
+      border-radius: 24px; padding: 3px; gap: 2px;
+    }
+    .idioma-btn {
+      background: transparent; border: none; color: var(--gris-suave);
+      font-family: inherit; font-size: 0.8rem; font-weight: 700;
+      padding: 5px 12px; border-radius: 20px; cursor: pointer;
+      transition: all 0.15s; letter-spacing: 0.05em;
+    }
+    .idioma-btn.activo { background: var(--magenta); color: var(--blanco); }
+    .idioma-btn:not(.activo):hover { color: var(--magenta); }
+
+    .usuario-chip {
+      font-size: 0.85rem; color: var(--gris-suave);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .usuario-chip strong { color: var(--gris-texto); }
+
+    .btn-salir {
+      background: transparent; border: 1.5px solid var(--gris-medio);
+      color: var(--gris-suave); font-family: inherit; font-size: 0.82rem;
+      font-weight: 600; padding: 7px 14px; border-radius: 20px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-salir:hover { border-color: var(--magenta); color: var(--magenta); }
+
+    /* ========== CONTENEDOR GENERAL ========== */
+    .contenedor {
+      max-width: 900px; margin: 0 auto; padding: 32px 24px 64px;
+    }
+
+    /* ========== LOGIN ========== */
+    .login-caja {
+      max-width: 420px; margin: 64px auto; background: var(--blanco);
+      border-radius: 14px; padding: 36px 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .login-caja .logo-grande {
+      width: 60px; height: 60px; background: var(--magenta); color: var(--blanco);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-family: 'Archivo Black', sans-serif; font-size: 1.6rem; margin: 0 auto 16px;
+    }
+    .login-caja h2 {
+      font-family: 'Archivo Black', sans-serif; font-size: 1.3rem;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .login-caja p { color: var(--gris-suave); font-size: 0.92rem; margin-bottom: 22px; }
+    .login-caja input[type="email"] {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--gris-medio);
+      border-radius: 10px; font-family: inherit; font-size: 0.95rem; margin-bottom: 14px;
+    }
+    .login-caja input[type="email"]:focus { outline: none; border-color: var(--magenta); }
+
+    .btn-principal {
+      background: var(--magenta); color: var(--blanco); border: none;
+      font-family: inherit; font-weight: 700; font-size: 0.92rem;
+      padding: 12px 20px; border-radius: 10px; cursor: pointer;
+      width: 100%; transition: background 0.15s;
+    }
+    .btn-principal:hover { background: var(--magenta-oscuro); }
+    .btn-principal:disabled { background: var(--gris-medio); color: var(--gris-suave); cursor: not-allowed; }
+
+    .login-mensaje {
+      margin-top: 16px; font-size: 0.85rem; padding: 10px 12px; border-radius: 8px;
+      display: none;
+    }
+    .login-mensaje.visible { display: block; }
+    .login-mensaje.exito { background: var(--verde-claro); color: var(--verde); }
+    .login-mensaje.error { background: var(--rojo-claro); color: var(--rojo); }
+
+    /* ========== PANEL ========== */
+    #panel { display: none; }
+
+    .bloque {
+      background: var(--blanco); border-radius: 14px; padding: 24px;
+      margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .bloque h2 {
+      font-family: 'Archivo Black', sans-serif; font-size: 1.05rem;
+      text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 18px;
+      color: var(--gris-texto);
+    }
+
+    .campo { margin-bottom: 16px; }
+    .campo label {
+      display: block; font-size: 0.82rem; font-weight: 700; color: var(--gris-suave);
+      margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .campo .opcional { font-weight: 400; text-transform: none; letter-spacing: 0; }
+    .campo input[type="text"],
+    .campo input[type="datetime-local"],
+    .campo textarea,
+    .campo select {
+      width: 100%; padding: 10px 12px; border: 1.5px solid var(--gris-medio);
+      border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--blanco);
+    }
+    .campo input:focus, .campo textarea:focus, .campo select:focus {
+      outline: none; border-color: var(--magenta);
+    }
+    .campo textarea { resize: vertical; min-height: 70px; }
+
+    .fila-doble { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 620px) { .fila-doble { grid-template-columns: 1fr; } }
+
+    .campo-check {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    }
+    .campo-check input { width: 18px; height: 18px; accent-color: var(--magenta); }
+    .campo-check label { margin: 0; font-size: 0.9rem; font-weight: 600; text-transform: none; color: var(--gris-texto); }
+
+    .acciones-formulario {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;
+    }
+    .btn-secundario {
+      background: var(--gris-claro); color: var(--gris-texto); border: none;
+      font-family: inherit; font-weight: 600; font-size: 0.88rem;
+      padding: 11px 18px; border-radius: 10px; cursor: pointer;
+    }
+    .btn-secundario:hover { background: var(--gris-medio); }
+    .acciones-formulario .btn-principal { width: auto; flex: 1; min-width: 160px; }
+
+    /* ========== LISTA DE EVENTOS ========== */
+    .lista-filtros {
+      display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .chip-filtro {
+      background: var(--gris-claro); border: 1.5px solid transparent;
+      border-radius: 20px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .chip-filtro.activo { background: var(--magenta); color: var(--blanco); }
+
+    .evento-fila {
+      display: flex; align-items: center; gap: 14px; padding: 14px 4px;
+      border-bottom: 1px solid var(--gris-medio);
+    }
+    .evento-fila:last-child { border-bottom: none; }
+    .evento-estado-punto {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .evento-estado-punto.publicado { background: var(--verde); }
+    .evento-estado-punto.borrador { background: var(--amarillo); }
+    .evento-estado-punto.cancelado { background: var(--gris-suave); }
+
+    .evento-info { flex: 1; min-width: 0; }
+    .evento-info .titulo { font-weight: 700; font-size: 0.95rem; }
+    .evento-info .meta { font-size: 0.8rem; color: var(--gris-suave); margin-top: 2px; }
+
+    .evento-acciones { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-icono {
+      background: var(--gris-claro); border: none; border-radius: 8px;
+      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--gris-suave); transition: all 0.15s;
+    }
+    .btn-icono:hover { background: var(--magenta-claro); color: var(--magenta); }
+    .btn-icono svg { width: 17px; height: 17px; }
+
+    .estado-vacio { text-align: center; color: var(--gris-suave); padding: 30px 0; font-size: 0.9rem; }
+
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--gris-texto); color: var(--blanco); padding: 12px 20px;
+      border-radius: 10px; font-size: 0.88rem; opacity: 0; pointer-events: none;
+      transition: all 0.25s; z-index: 100;
+    }
+    .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========== CABECERA ========== -->
+  <header class="cabecera">
+    <div class="cabecera-contenido">
+      <div class="cabecera-marca">
+        <div class="logo">M</div>
+        <div>
+          <h1>Mobidurango</h1>
+          <div class="subtitulo-marca" data-i18n="subtitulo_marca">Kudeaketa panela · Panel de gestión</div>
+        </div>
+      </div>
+      <div class="cabecera-acciones">
+        <div class="idioma-toggle" role="group" aria-label="Hizkuntza / Idioma">
+          <button class="idioma-btn activo" data-idioma="eu">EU</button>
+          <button class="idioma-btn" data-idioma="es">ES</button>
+        </div>
+        <div id="usuario-chip" class="usuario-chip" style="display:none;"></div>
+        <button id="btn-salir" class="btn-salir" style="display:none;" data-i18n="salir">Irten</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== LOGIN ========== -->
+  <div class="contenedor" id="vista-login">
+    <div class="login-caja">
+      <div class="logo-grande">M</div>
+      <h2 data-i18n="login_titulo">Sartu panelera</h2>
+      <p data-i18n="login_texto">Idatzi zure e-posta helbidea, eta sarbide-esteka bat bidaliko dizugu.</p>
+      <input type="email" id="input-email" placeholder="zuzena@adibidez.eus" autocomplete="email">
+      <button class="btn-principal" id="btn-bidali-esteka" data-i18n="login_boton">Bidali sarbide-esteka</button>
+      <div class="login-mensaje" id="login-mensaje"></div>
+    </div>
+  </div>
+
+  <!-- ========== PANEL PRINCIPAL ========== -->
+  <div class="contenedor" id="panel">
+
+    <!-- FORMULARIO -->
+    <div class="bloque">
+      <h2 id="form-titulo" data-i18n="form_titulo_nuevo">Ekitaldi berria</h2>
+      <form id="form-evento">
+        <input type="hidden" id="campo-id">
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label data-i18n="campo_titulo_eu">Izenburua (euskera)</label>
+            <input type="text" id="campo-titulo-eu" required>
+          </div>
+          <div class="campo">
+            <label data-i18n="campo_titulo_es"><span data-i18n="campo_titulo_es_texto">Título (castellano)</span> <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <input type="text" id="campo-titulo-es">
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label data-i18n="campo_detalle_eu">Azalpena (euskera) <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <textarea id="campo-detalle-eu"></textarea>
+          </div>
+          <div class="campo">
+            <label data-i18n="campo_detalle_es">Descripción (castellano) <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <textarea id="campo-detalle-es"></textarea>
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label data-i18n="campo_fecha_inicio">Hasiera-data eta ordua</label>
+            <input type="datetime-local" id="campo-fecha-inicio" required>
+          </div>
+          <div class="campo">
+            <label data-i18n="campo_fecha_fin">Amaiera-data <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <input type="datetime-local" id="campo-fecha-fin">
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label data-i18n="campo_tipo">Mota</label>
+            <select id="campo-tipo">
+              <option value="puntual" data-i18n="tipo_puntual">Puntuala</option>
+              <option value="semanal" data-i18n="tipo_semanal">Astekoa</option>
+              <option value="mensual" data-i18n="tipo_mensual">Hilekoa</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label data-i18n="campo_poblacion">Herria <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <select id="campo-poblacion">
+              <option value="">—</option>
+              <option value="durango">Durango</option>
+              <option value="abadino">Abadiño</option>
+              <option value="atxondo">Atxondo</option>
+              <option value="berriz">Berriz</option>
+              <option value="elorrio">Elorrio</option>
+              <option value="ermua">Ermua</option>
+              <option value="garai">Garai</option>
+              <option value="iurreta">Iurreta</option>
+              <option value="izurtza">Izurtza</option>
+              <option value="mallabia">Mallabia</option>
+              <option value="manaria">Manaria</option>
+              <option value="zaldibar">Zaldibar</option>
+              <option value="otros" data-i18n="poblacion_otros">Beste bat</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label data-i18n="campo_lugar">Lekua <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <input type="text" id="campo-lugar">
+          </div>
+          <div class="campo">
+            <label data-i18n="campo_direccion">Helbidea <span class="opcional" data-i18n="opcional">(aukerakoa)</span></label>
+            <input type="text" id="campo-direccion">
+          </div>
+        </div>
+
+        <div class="fila-doble">
+          <div class="campo">
+            <label data-i18n="campo_organizador">Antolatzailea</label>
+            <input type="text" id="campo-organizador" value="Mobidurango">
+          </div>
+          <div class="campo">
+            <label data-i18n="campo_estado">Egoera</label>
+            <select id="campo-estado">
+              <option value="publicado" data-i18n="estado_publicado">Argitaratuta</option>
+              <option value="borrador" data-i18n="estado_borrador">Zirriborroa</option>
+              <option value="cancelado" data-i18n="estado_cancelado">Bertan behera</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo-check">
+          <input type="checkbox" id="campo-destacado">
+          <label for="campo-destacado" data-i18n="campo_destacado">Nabarmendu ekitaldia</label>
+        </div>
+
+        <div class="acciones-formulario">
+          <button type="submit" class="btn-principal" id="btn-guardar" data-i18n="form_guardar">Gorde ekitaldia</button>
+          <button type="button" class="btn-secundario" id="btn-cancelar-edicion" style="display:none;" data-i18n="form_cancelar_edicion">Utzi edizioa</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- LISTA DE EVENTOS -->
+    <div class="bloque">
+      <h2 data-i18n="lista_titulo">Ekitaldiak</h2>
+      <div class="lista-filtros">
+        <button class="chip-filtro activo" data-filtro="activos" data-i18n="filtro_activos">Aktiboak</button>
+        <button class="chip-filtro" data-filtro="todos" data-i18n="filtro_todos">Guztiak</button>
+        <button class="chip-filtro" data-filtro="cancelado" data-i18n="filtro_cancelados">Bertan behera utzitakoak</button>
+      </div>
+      <div id="lista-eventos">
+        <div class="estado-vacio" data-i18n="cargando">Kargatzen…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    (function () {
+      // -------- Configuración Supabase (misma que egutegia.html) --------
+      const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // -------- Traducciones --------
+      const I18N = {
+        eu: {
+          subtitulo_marca: 'Kudeaketa panela',
+          salir: 'Irten',
+          login_titulo: 'Sartu panelera',
+          login_texto: 'Idatzi zure e-posta helbidea, eta sarbide-esteka bat bidaliko dizugu.',
+          login_boton: 'Bidali sarbide-esteka',
+          login_esperando: 'Bidaltzen…',
+          login_ok: 'Esteka bidali da. Begiratu zure posta (baita spam karpeta ere).',
+          login_error_generico: 'Errorea gertatu da. Saiatu berriro.',
+          login_no_autorizado: 'Helbide hau ez dago baimenduta panel honetan sartzeko.',
+          form_titulo_nuevo: 'Ekitaldi berria',
+          form_titulo_editar: 'Ekitaldia editatzen',
+          campo_titulo_eu: 'Izenburua (euskera)',
+          campo_titulo_es_texto: 'Izenburua (gaztelania)',
+          opcional: '(aukerakoa)',
+          campo_detalle_eu: 'Azalpena (euskera)',
+          campo_detalle_es: 'Azalpena (gaztelania)',
+          campo_fecha_inicio: 'Hasiera-data eta ordua',
+          campo_fecha_fin: 'Amaiera-data',
+          campo_tipo: 'Mota',
+          tipo_puntual: 'Puntuala',
+          tipo_semanal: 'Astekoa',
+          tipo_mensual: 'Hilekoa',
+          campo_poblacion: 'Herria',
+          poblacion_otros: 'Beste bat',
+          campo_lugar: 'Lekua',
+          campo_direccion: 'Helbidea',
+          campo_organizador: 'Antolatzailea',
+          campo_estado: 'Egoera',
+          estado_publicado: 'Argitaratuta',
+          estado_borrador: 'Zirriborroa',
+          estado_cancelado: 'Bertan behera',
+          campo_destacado: 'Nabarmendu ekitaldia',
+          form_guardar: 'Gorde ekitaldia',
+          form_cancelar_edicion: 'Utzi edizioa',
+          lista_titulo: 'Ekitaldiak',
+          filtro_activos: 'Aktiboak',
+          filtro_todos: 'Guztiak',
+          filtro_cancelados: 'Bertan behera utzitakoak',
+          cargando: 'Kargatzen…',
+          lista_vacia: 'Ez dago ekitaldirik multzo honetan.',
+          toast_gordeta: 'Ekitaldia gorde da.',
+          toast_bertan_behera: 'Ekitaldia bertan behera utzi da.',
+          toast_berreskuratuta: 'Ekitaldia berreskuratu da.',
+          toast_errorea: 'Errorea gertatu da. Saiatu berriro.',
+          confirmar_bertan_behera: 'Ziur zaude ekitaldi hau bertan behera utzi nahi duzula?',
+          accion_editar: 'Editatu',
+          accion_bertan_behera: 'Bertan behera utzi',
+          accion_berreskuratu: 'Berreskuratu',
+          campo_titulo_eu_falta: 'Izenburua (euskera) beharrezkoa da.',
+          campo_fecha_falta: 'Hasiera-data beharrezkoa da.'
+        },
+        es: {
+          subtitulo_marca: 'Panel de gestión',
+          salir: 'Salir',
+          login_titulo: 'Entrar al panel',
+          login_texto: 'Escribe tu email y te enviaremos un enlace de acceso.',
+          login_boton: 'Enviar enlace de acceso',
+          login_esperando: 'Enviando…',
+          login_ok: 'Enlace enviado. Revisa tu correo (también la carpeta de spam).',
+          login_error_generico: 'Ha ocurrido un error. Inténtalo de nuevo.',
+          login_no_autorizado: 'Este email no tiene acceso autorizado a este panel.',
+          form_titulo_nuevo: 'Nuevo evento',
+          form_titulo_editar: 'Editando evento',
+          campo_titulo_eu: 'Título (euskera)',
+          campo_titulo_es_texto: 'Título (castellano)',
+          opcional: '(opcional)',
+          campo_detalle_eu: 'Descripción (euskera)',
+          campo_detalle_es: 'Descripción (castellano)',
+          campo_fecha_inicio: 'Fecha y hora de inicio',
+          campo_fecha_fin: 'Fecha de fin',
+          campo_tipo: 'Tipo',
+          tipo_puntual: 'Puntual',
+          tipo_semanal: 'Semanal',
+          tipo_mensual: 'Mensual',
+          campo_poblacion: 'Población',
+          poblacion_otros: 'Otra',
+          campo_lugar: 'Lugar',
+          campo_direccion: 'Dirección',
+          campo_organizador: 'Organizador',
+          campo_estado: 'Estado',
+          estado_publicado: 'Publicado',
+          estado_borrador: 'Borrador',
+          estado_cancelado: 'Cancelado',
+          campo_destacado: 'Destacar evento',
+          form_guardar: 'Guardar evento',
+          form_cancelar_edicion: 'Cancelar edición',
+          lista_titulo: 'Eventos',
+          filtro_activos: 'Activos',
+          filtro_todos: 'Todos',
+          filtro_cancelados: 'Cancelados',
+          cargando: 'Cargando…',
+          lista_vacia: 'No hay eventos en este grupo.',
+          toast_gordeta: 'Evento guardado.',
+          toast_bertan_behera: 'Evento cancelado.',
+          toast_berreskuratuta: 'Evento recuperado.',
+          toast_errorea: 'Ha ocurrido un error. Inténtalo de nuevo.',
+          confirmar_bertan_behera: '¿Seguro que quieres cancelar este evento?',
+          accion_editar: 'Editar',
+          accion_bertan_behera: 'Cancelar',
+          accion_berreskuratu: 'Recuperar',
+          campo_titulo_eu_falta: 'El título (euskera) es obligatorio.',
+          campo_fecha_falta: 'La fecha de inicio es obligatoria.'
+        }
+      };
+
+      let idiomaActivo = localStorage.getItem('mobidu_admin_idioma') || 'eu';
+      let usuarioActual = null;     // fila de admin_users
+      let todosEventos = [];
+      let filtroActivo = 'activos';
+      let editandoId = null;
+
+      const POBLACIONES_LABEL = {
+        durango: 'Durango', abadino: 'Abadiño', atxondo: 'Atxondo', berriz: 'Berriz',
+        elorrio: 'Elorrio', ermua: 'Ermua', garai: 'Garai', iurreta: 'Iurreta',
+        izurtza: 'Izurtza', mallabia: 'Mallabia', manaria: 'Manaria', zaldibar: 'Zaldibar', otros: 'Beste bat'
+      };
+
+      // -------- Utilidades --------
+      function escapar(t) {
+        if (t == null) return '';
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      function mostrarToast(mensaje) {
+        const toast = document.getElementById('toast');
+        toast.textContent = mensaje;
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 2400);
+      }
+
+      function aplicarIdioma() {
+        const t = I18N[idiomaActivo];
+        document.documentElement.lang = idiomaActivo;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const clave = el.dataset.i18n;
+          if (t[clave]) el.textContent = t[clave];
+        });
+        document.querySelectorAll('.idioma-btn').forEach(btn => {
+          btn.classList.toggle('activo', btn.dataset.idioma === idiomaActivo);
+        });
+        renderLista();
+      }
+
+      document.querySelectorAll('.idioma-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const nuevo = btn.dataset.idioma;
+          if (nuevo === idiomaActivo) return;
+          idiomaActivo = nuevo;
+          try { localStorage.setItem('mobidu_admin_idioma', nuevo); } catch {}
+          aplicarIdioma();
+        });
+      });
+
+      // ===================================================
+      // LOGIN
+      // ===================================================
+      const inputEmail = document.getElementById('input-email');
+      const btnBidali = document.getElementById('btn-bidali-esteka');
+      const loginMensaje = document.getElementById('login-mensaje');
+
+      function mostrarMensajeLogin(texto, tipo) {
+        loginMensaje.textContent = texto;
+        loginMensaje.className = 'login-mensaje visible ' + tipo;
+      }
+
+      btnBidali.addEventListener('click', async () => {
+        const email = inputEmail.value.trim();
+        if (!email) return;
+        const t = I18N[idiomaActivo];
+        btnBidali.disabled = true;
+        btnBidali.textContent = t.login_esperando;
+        const { error } = await sb.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.origin + window.location.pathname }
+        });
+        btnBidali.disabled = false;
+        btnBidali.textContent = t.login_boton;
+        if (error) {
+          mostrarMensajeLogin(t.login_error_generico, 'error');
+        } else {
+          mostrarMensajeLogin(t.login_ok, 'exito');
+        }
+      });
+
+      document.getElementById('btn-salir').addEventListener('click', async () => {
+        await sb.auth.signOut();
+        window.location.reload();
+      });
+
+      // ===================================================
+      // SESIÓN Y AUTORIZACIÓN
+      // ===================================================
+      async function comprobarSesion() {
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) {
+          mostrarLogin();
+          return;
+        }
+        // Buscar el rol en admin_users
+        const { data, error } = await sb
+          .from('admin_users')
+          .select('id, email, nombre, rol, activo')
+          .eq('id', session.user.id)
+          .maybeSingle();
+
+        if (error || !data || !data.activo) {
+          await sb.auth.signOut();
+          mostrarLogin();
+          const t = I18N[idiomaActivo];
+          mostrarMensajeLogin(t.login_no_autorizado, 'error');
+          return;
+        }
+
+        usuarioActual = data;
+        mostrarPanel();
+      }
+
+      function mostrarLogin() {
+        document.getElementById('vista-login').style.display = 'block';
+        document.getElementById('panel').style.display = 'none';
+        document.getElementById('usuario-chip').style.display = 'none';
+        document.getElementById('btn-salir').style.display = 'none';
+      }
+
+      function mostrarPanel() {
+        document.getElementById('vista-login').style.display = 'none';
+        document.getElementById('panel').style.display = 'block';
+        const chip = document.getElementById('usuario-chip');
+        chip.style.display = 'flex';
+        chip.innerHTML = `<strong>${escapar(usuarioActual.nombre || usuarioActual.email)}</strong>`;
+        document.getElementById('btn-salir').style.display = 'inline-block';
+        cargarEventos();
+      }
+
+      sb.auth.onAuthStateChange((_evento, _session) => {
+        comprobarSesion();
+      });
+
+      // ===================================================
+      // FORMULARIO: crear / editar
+      // ===================================================
+      const form = document.getElementById('form-evento');
+      const btnCancelarEdicion = document.getElementById('btn-cancelar-edicion');
+
+      function limpiarFormulario() {
+        form.reset();
+        document.getElementById('campo-id').value = '';
+        document.getElementById('campo-organizador').value = 'Mobidurango';
+        document.getElementById('campo-tipo').value = 'puntual';
+        document.getElementById('campo-estado').value = 'publicado';
+        editandoId = null;
+        document.getElementById('form-titulo').textContent = I18N[idiomaActivo].form_titulo_nuevo;
+        btnCancelarEdicion.style.display = 'none';
+      }
+
+      function cargarEnFormulario(ev) {
+        editandoId = ev.id;
+        document.getElementById('campo-id').value = ev.id;
+        document.getElementById('campo-titulo-eu').value = ev.titulo_eu || '';
+        document.getElementById('campo-titulo-es').value = ev.titulo_es || '';
+        document.getElementById('campo-detalle-eu').value = ev.detalle_eu || '';
+        document.getElementById('campo-detalle-es').value = ev.detalle_es || '';
+        document.getElementById('campo-fecha-inicio').value = aFechaLocal(ev.fecha_inicio);
+        document.getElementById('campo-fecha-fin').value = aFechaLocal(ev.fecha_fin);
+        document.getElementById('campo-tipo').value = ev.tipo || 'puntual';
+        document.getElementById('campo-poblacion').value = ev.poblacion || '';
+        document.getElementById('campo-lugar').value = ev.lugar || '';
+        document.getElementById('campo-direccion').value = ev.direccion || '';
+        document.getElementById('campo-organizador').value = ev.organizador || 'Mobidurango';
+        document.getElementById('campo-estado').value = ev.estado || 'publicado';
+        document.getElementById('campo-destacado').checked = !!ev.destacado;
+        document.getElementById('form-titulo').textContent = I18N[idiomaActivo].form_titulo_editar;
+        btnCancelarEdicion.style.display = 'inline-block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // datetime-local necesita 'YYYY-MM-DDTHH:mm' en hora local
+      function aFechaLocal(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+
+      btnCancelarEdicion.addEventListener('click', limpiarFormulario);
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const t = I18N[idiomaActivo];
+
+        const tituloEu = document.getElementById('campo-titulo-eu').value.trim();
+        const fechaInicio = document.getElementById('campo-fecha-inicio').value;
+
+        if (!tituloEu) { mostrarToast(t.campo_titulo_eu_falta); return; }
+        if (!fechaInicio) { mostrarToast(t.campo_fecha_falta); return; }
+
+        const payload = {
+          titulo_eu: tituloEu,
+          titulo_es: document.getElementById('campo-titulo-es').value.trim() || null,
+          detalle_eu: document.getElementById('campo-detalle-eu').value.trim() || null,
+          detalle_es: document.getElementById('campo-detalle-es').value.trim() || null,
+          fecha_inicio: new Date(fechaInicio).toISOString(),
+          fecha_fin: document.getElementById('campo-fecha-fin').value
+            ? new Date(document.getElementById('campo-fecha-fin').value).toISOString()
+            : null,
+          tipo: document.getElementById('campo-tipo').value,
+          poblacion: document.getElementById('campo-poblacion').value || null,
+          lugar: document.getElementById('campo-lugar').value.trim() || null,
+          direccion: document.getElementById('campo-direccion').value.trim() || null,
+          organizador: document.getElementById('campo-organizador').value.trim() || 'Mobidurango',
+          estado: document.getElementById('campo-estado').value,
+          destacado: document.getElementById('campo-destacado').checked
+        };
+
+        const btnGuardar = document.getElementById('btn-guardar');
+        btnGuardar.disabled = true;
+
+        let resultado;
+        if (editandoId) {
+          resultado = await sb.from('eventos').update(payload).eq('id', editandoId);
+        } else {
+          payload.created_by = (await sb.auth.getUser()).data.user.id;
+          resultado = await sb.from('eventos').insert(payload);
+        }
+
+        btnGuardar.disabled = false;
+
+        if (resultado.error) {
+          mostrarToast(t.toast_errorea);
+          console.error(resultado.error);
+          return;
+        }
+
+        mostrarToast(t.toast_gordeta);
+        limpiarFormulario();
+        cargarEventos();
+      });
+
+      // ===================================================
+      // LISTA DE EVENTOS
+      // ===================================================
+      document.querySelectorAll('.chip-filtro').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filtroActivo = btn.dataset.filtro;
+          document.querySelectorAll('.chip-filtro').forEach(b => b.classList.toggle('activo', b === btn));
+          renderLista();
+        });
+      });
+
+      async function cargarEventos() {
+        const { data, error } = await sb
+          .from('eventos')
+          .select('*')
+          .order('fecha_inicio', { ascending: false });
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+        todosEventos = data || [];
+        renderLista();
+      }
+
+      function renderLista() {
+        const t = I18N[idiomaActivo];
+        const contenedor = document.getElementById('lista-eventos');
+
+        let filtrados = todosEventos;
+        if (filtroActivo === 'activos') {
+          filtrados = todosEventos.filter(ev => ev.estado !== 'cancelado');
+        } else if (filtroActivo === 'cancelado') {
+          filtrados = todosEventos.filter(ev => ev.estado === 'cancelado');
+        }
+
+        if (filtrados.length === 0) {
+          contenedor.innerHTML = `<div class="estado-vacio">${escapar(t.lista_vacia)}</div>`;
+          return;
+        }
+
+        contenedor.innerHTML = filtrados.map(ev => pintarFilaEvento(ev, t)).join('');
+
+        // Enganchar acciones
+        contenedor.querySelectorAll('[data-accion="editar"]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const ev = todosEventos.find(x => x.id === btn.dataset.id);
+            if (ev) cargarEnFormulario(ev);
+          });
+        });
+        contenedor.querySelectorAll('[data-accion="cancelar"]').forEach(btn => {
+          btn.addEventListener('click', () => cambiarEstado(btn.dataset.id, 'cancelado'));
+        });
+        contenedor.querySelectorAll('[data-accion="recuperar"]').forEach(btn => {
+          btn.addEventListener('click', () => cambiarEstado(btn.dataset.id, 'publicado'));
+        });
+      }
+
+      function pintarFilaEvento(ev, t) {
+        const fecha = new Date(ev.fecha_inicio);
+        const fechaTexto = fecha.toLocaleDateString(idiomaActivo === 'eu' ? 'eu-ES' : 'es-ES', {
+          day: '2-digit', month: '2-digit', year: 'numeric'
+        }) + ' · ' + fecha.toLocaleTimeString(idiomaActivo === 'eu' ? 'eu-ES' : 'es-ES', {
+          hour: '2-digit', minute: '2-digit'
+        });
+        const titulo = idiomaActivo === 'eu' ? (ev.titulo_eu || ev.titulo_es) : (ev.titulo_es || ev.titulo_eu);
+        const poblacionTexto = ev.poblacion ? (POBLACIONES_LABEL[ev.poblacion] || ev.poblacion) : '';
+        const estadoLabel = ev.estado === 'publicado' ? t.estado_publicado
+          : ev.estado === 'cancelado' ? t.estado_cancelado
+          : t.estado_borrador;
+
+        const accionesHtml = ev.estado === 'cancelado'
+          ? `<button class="btn-icono" data-accion="recuperar" data-id="${ev.id}" title="${escapar(t.accion_berreskuratu)}" aria-label="${escapar(t.accion_berreskuratu)}">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+             </button>`
+          : `<button class="btn-icono" data-accion="editar" data-id="${ev.id}" title="${escapar(t.accion_editar)}" aria-label="${escapar(t.accion_editar)}">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+             </button>
+             <button class="btn-icono" data-accion="cancelar" data-id="${ev.id}" title="${escapar(t.accion_bertan_behera)}" aria-label="${escapar(t.accion_bertan_behera)}">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+             </button>`;
+
+        return `
+          <div class="evento-fila">
+            <span class="evento-estado-punto ${ev.estado}" title="${escapar(estadoLabel)}"></span>
+            <div class="evento-info">
+              <div class="titulo">${escapar(titulo)}</div>
+              <div class="meta">${escapar(fechaTexto)}${poblacionTexto ? ' · ' + escapar(poblacionTexto) : ''} · ${escapar(estadoLabel)}</div>
+            </div>
+            <div class="evento-acciones">${accionesHtml}</div>
+          </div>
+        `;
+      }
+
+      async function cambiarEstado(id, nuevoEstado) {
+        const t = I18N[idiomaActivo];
+        if (nuevoEstado === 'cancelado' && !window.confirm(t.confirmar_bertan_behera)) return;
+
+        const { error } = await sb.from('eventos').update({ estado: nuevoEstado }).eq('id', id);
+        if (error) {
+          mostrarToast(t.toast_errorea);
+          console.error(error);
+          return;
+        }
+        mostrarToast(nuevoEstado === 'cancelado' ? t.toast_bertan_behera : t.toast_berreskuratuta);
+        cargarEventos();
+      }
+
+      // -------- Arranque --------
+      aplicarIdioma();
+      comprobarSesion();
+    })();
+  </script>
+
+</body>
+</html>
