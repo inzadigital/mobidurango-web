@@ -13,6 +13,7 @@ mobidurango-web/
 ├── index.html              · Página principal en euskera (idioma institucional por defecto)
 ├── mobidurango-es.html     · Página principal en castellano
 ├── egutegia.html           · Calendario dinámico bilingüe (lista + mes)
+├── admin.html              · Panel de gestión de eventos (acceso restringido)
 └── img/                    · Fotografías del equipo, actividades y logos institucionales
 ```
 
@@ -28,7 +29,9 @@ El calendario (`egutegia.html`) es una página única bilingüe: alterna idioma 
 |---|---|
 | Páginas principales | HTML5 + CSS3 puro, sin frameworks |
 | Calendario dinámico | HTML + JavaScript vanilla, `fetch` contra Supabase REST |
+| Panel de gestión | HTML + JavaScript vanilla, `supabase-js` v2 |
 | Base de datos | Supabase (PostgreSQL gestionado) |
+| Autenticación | Supabase Auth — email + contraseña |
 | Tipografías | Google Fonts (Archivo Black + Inter) |
 | Hosting | Vercel, despliegue automático desde `main` |
 | Dominio | mobidurango.kirolkudeaketa.com |
@@ -37,7 +40,7 @@ El calendario (`egutegia.html`) es una página única bilingüe: alterna idioma 
 
 ## Calendario (`egutegia.html`)
 
-El calendario lee la tabla `eventos` de Supabase mediante la REST API pública, usando la clave `anon` (publishable). No tiene panel de administración web: los eventos se gestionan directamente desde el dashboard de Supabase.
+El calendario lee la tabla `eventos` de Supabase mediante la REST API pública, usando la clave `anon` (publishable), en modo solo lectura. Los eventos se gestionan desde `admin.html` (ver sección siguiente) o, si hace falta, directamente desde el dashboard de Supabase.
 
 ### Filtros de visibilidad
 
@@ -78,6 +81,51 @@ La constante `SITIO_URL` al inicio del bloque `<script>` (línea ~920) es la ún
 
 ---
 
+## Panel de administración (`admin.html`)
+
+Página de gestión de eventos, no indexable (`meta robots: noindex, nofollow`), pensada para un círculo cerrado de personas de confianza: Durango Kirolak (rol `admin`) y Athlon (rol `editor_mobidurango`). No hay flujo de aprobación: cualquiera de los dos roles puede crear, editar, publicar y cancelar eventos de forma autónoma, sin depender del otro.
+
+### Autenticación
+
+- Login con **email + contraseña** (Supabase Auth). No se usa magic link: el servicio de email gratuito de Supabase tiene un límite muy bajo de envíos por proyecto (no por persona), y con el uso normal del panel se agota enseguida.
+- Un usuario solo entra al panel si, además de tener sesión válida en Supabase Auth, existe como fila **activa** en `public.admin_users`. Tener cuenta de Auth no es suficiente por sí solo.
+- **Alta de una persona nueva:**
+  1. Supabase → Authentication → Users → *Invite user* (esto crea la fila en `auth.users` y genera su `id`).
+  2. Insertar ese mismo `id` en `public.admin_users` con el `rol` correspondiente (ver tabla abajo).
+  3. Fijar la contraseña **por SQL**, para no depender del límite de envío de correos:
+     ```sql
+     update auth.users
+     set encrypted_password = crypt('CONTRASEÑA_AQUI', gen_salt('bf')),
+         updated_at = now()
+     where email = 'email@dominio.eus';
+     ```
+     (requiere la extensión `pgcrypto`, ya activa en el proyecto). Esto usa el mismo cifrado bcrypt que usa Supabase Auth por debajo, así que el login funciona igual que si se hubiera puesto por el formulario de recuperación de contraseña.
+  4. Compartir la contraseña por un canal que no sea el propio email en texto plano si es posible (llamada, WhatsApp, gestor de contraseñas).
+
+### Roles (tabla `public.admin_users`)
+
+| Columna | Uso |
+|---|---|
+| `id` | Mismo UUID que `auth.users.id` |
+| `email`, `nombre` | Identificación de la persona/cuenta |
+| `rol` | `admin` \| `editor_mobidurango` \| `editor_asociacion` (este último reservado, sin usar todavía) |
+| `activo` | Desactivar acceso sin borrar el historial: poner a `false` |
+| `asociacion_nombre` | Reservado para cuando se abra el panel a más asociaciones (rol `editor_asociacion`) |
+
+Las funciones `is_admin()` e `is_editor()` (SQL, en el propio proyecto Supabase) consultan esta tabla y sostienen todas las políticas RLS de `eventos`.
+
+### Permisos sobre `eventos` (RLS)
+
+- **INSERT / UPDATE**: `admin` o `editor_mobidurango`, sin restricción de `created_by` — cualquiera de los dos roles puede tocar eventos creados por cualquier otra persona del mismo círculo.
+- **DELETE** (borrado físico, irreversible): reservado solo a `admin`. Es la única acción que Athlon no tiene.
+- **"Eliminar" desde el panel** no es un `DELETE`: es un `UPDATE` que pone `estado = 'cancelado'`. El evento desaparece de la web pública (no cumple `estado = 'publicado'`) pero sigue existiendo y es reversible desde el filtro "Bertan behera utzitakoak" / "Cancelados" del propio panel.
+
+### Estados de `eventos.estado`
+
+`borrador` · `pendiente_aprobacion` (heredado de un diseño anterior con aprobación, sin uso actual) · `publicado` · `rechazado` (heredado, sin uso actual) · `cancelado` (borrado suave, usado por el panel)
+
+---
+
 ## Despliegue
 
 El repositorio está conectado a Vercel: cada push a la rama `main` lanza un deploy automático. No hay paso de build — son archivos estáticos.
@@ -96,17 +144,18 @@ Sustituir los archivos en `img/` manteniendo el nombre. Los HTML referencian rut
 
 ### Cambios en el calendario
 
-- **Añadir/editar eventos:** desde el dashboard de Supabase, tabla `eventos`.
-- **Despublicar un evento:** cambiar `published` a `false` o `estado` a algo distinto de `'publicado'`.
-- **Añadir una nueva población:** insertar el slug en el `POBLACIONES_MAP` de `egutegia.html` con su nombre formateado (tildes, eñes).
+- **Añadir/editar/cancelar eventos:** desde `admin.html`, con cuenta de rol `admin` o `editor_mobidurango`. También es posible seguir haciéndolo directamente desde el dashboard de Supabase si hace falta.
+- **Despublicar un evento:** desde el panel, botón "Cancelar" (pone `estado = 'cancelado'`), o manualmente cambiando `published` a `false` / `estado` a algo distinto de `'publicado'`.
+- **Añadir una nueva población:** insertar el slug en el `POBLACIONES_MAP` de `egutegia.html` (y en el `<select>` de `admin.html`) con su nombre formateado (tildes, eñes), y en el `check constraint` `eventos_poblacion_check` de la tabla.
 
 ---
 
 ## Pendientes conocidos
 
-- Panel de administración web para gestionar eventos sin entrar a Supabase.
-- Integración con `durangokirolak.net` vía OMESA.
+- Limpieza de los eventos de demostración (`es_demo = true`) cuando se disponga de datos reales suficientes.
+- Integración con `durangokirolak.net` vía OMESA (auto-altura del iframe + detección de embebido).
 - Página institucional del proyecto (`mobidurango-proiektua.html`) — diseñada pero no integrada en este repositorio.
+- Rol `editor_asociacion` preparado en base de datos pero sin usar — pendiente de decisión sobre abrir el panel a más asociaciones.
 
 ---
 
