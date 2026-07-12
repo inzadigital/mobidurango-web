@@ -273,10 +273,25 @@
   <div class="contenedor" id="vista-login">
     <div class="login-caja">
       <div class="logo-grande">M</div>
-      <h2 data-i18n="login_titulo">Sartu panelera</h2>
-      <p data-i18n="login_texto">Idatzi zure e-posta helbidea, eta sarbide-esteka bat bidaliko dizugu.</p>
-      <input type="email" id="input-email" placeholder="zuzena@adibidez.eus" autocomplete="email">
-      <button class="btn-principal" id="btn-bidali-esteka" data-i18n="login_boton">Bidali sarbide-esteka</button>
+
+      <!-- Estado normal: email + contraseña -->
+      <div id="bloque-login">
+        <h2 data-i18n="login_titulo">Sartu panelera</h2>
+        <p data-i18n="login_texto">Idatzi zure e-posta eta pasahitza.</p>
+        <input type="email" id="input-email" placeholder="zuzena@adibidez.eus" autocomplete="email">
+        <input type="password" id="input-password" placeholder="Pasahitza" autocomplete="current-password" style="margin-top:0;">
+        <button class="btn-principal" id="btn-login" data-i18n="login_boton" style="margin-top:14px;">Sartu</button>
+      </div>
+
+      <!-- Estado recuperación: fijar contraseña nueva (solo visible si se llega desde el email de recuperación) -->
+      <div id="bloque-recovery" style="display:none;">
+        <h2 data-i18n="recovery_titulo">Ezarri zure pasahitza</h2>
+        <p data-i18n="recovery_texto">Idatzi erabiliko duzun pasahitza. Gutxienez 6 karaktere.</p>
+        <input type="password" id="input-password-berria" placeholder="Pasahitz berria" autocomplete="new-password">
+        <input type="password" id="input-password-berria-2" placeholder="Errepikatu pasahitza" autocomplete="new-password" style="margin-top:0;">
+        <button class="btn-principal" id="btn-recovery" data-i18n="recovery_boton" style="margin-top:14px;">Ezarri pasahitza</button>
+      </div>
+
       <div class="login-mensaje" id="login-mensaje"></div>
     </div>
   </div>
@@ -420,12 +435,19 @@
           subtitulo_marca: 'Kudeaketa panela',
           salir: 'Irten',
           login_titulo: 'Sartu panelera',
-          login_texto: 'Idatzi zure e-posta helbidea, eta sarbide-esteka bat bidaliko dizugu.',
-          login_boton: 'Bidali sarbide-esteka',
-          login_esperando: 'Bidaltzen…',
-          login_ok: 'Esteka bidali da. Begiratu zure posta (baita spam karpeta ere).',
+          login_texto: 'Idatzi zure e-posta eta pasahitza.',
+          login_boton: 'Sartu',
+          login_esperando: 'Sartzen…',
+          login_credenciales_okerrak: 'E-posta edo pasahitza ez dira zuzenak.',
           login_error_generico: 'Errorea gertatu da. Saiatu berriro.',
           login_no_autorizado: 'Helbide hau ez dago baimenduta panel honetan sartzeko.',
+          recovery_titulo: 'Ezarri zure pasahitza',
+          recovery_texto: 'Idatzi erabiliko duzun pasahitza. Gutxienez 6 karaktere.',
+          recovery_boton: 'Ezarri pasahitza',
+          recovery_esperando: 'Gordetzen…',
+          recovery_ok: 'Pasahitza ezarri da. Sartzen…',
+          recovery_ez_datoz_bat: 'Bi pasahitzak ez datoz bat.',
+          recovery_laburregia: 'Pasahitzak gutxienez 6 karaktere izan behar ditu.',
           form_titulo_nuevo: 'Ekitaldi berria',
           form_titulo_editar: 'Ekitaldia editatzen',
           campo_titulo_eu: 'Izenburua (euskera)',
@@ -472,12 +494,19 @@
           subtitulo_marca: 'Panel de gestión',
           salir: 'Salir',
           login_titulo: 'Entrar al panel',
-          login_texto: 'Escribe tu email y te enviaremos un enlace de acceso.',
-          login_boton: 'Enviar enlace de acceso',
-          login_esperando: 'Enviando…',
-          login_ok: 'Enlace enviado. Revisa tu correo (también la carpeta de spam).',
+          login_texto: 'Escribe tu email y tu contraseña.',
+          login_boton: 'Entrar',
+          login_esperando: 'Entrando…',
+          login_credenciales_okerrak: 'El email o la contraseña no son correctos.',
           login_error_generico: 'Ha ocurrido un error. Inténtalo de nuevo.',
           login_no_autorizado: 'Este email no tiene acceso autorizado a este panel.',
+          recovery_titulo: 'Establece tu contraseña',
+          recovery_texto: 'Escribe la contraseña que vas a usar. Mínimo 6 caracteres.',
+          recovery_boton: 'Guardar contraseña',
+          recovery_esperando: 'Guardando…',
+          recovery_ok: 'Contraseña guardada. Entrando…',
+          recovery_ez_datoz_bat: 'Las dos contraseñas no coinciden.',
+          recovery_laburregia: 'La contraseña debe tener al menos 6 caracteres.',
           form_titulo_nuevo: 'Nuevo evento',
           form_titulo_editar: 'Editando evento',
           campo_titulo_eu: 'Título (euskera)',
@@ -572,10 +601,11 @@
       });
 
       // ===================================================
-      // LOGIN
+      // LOGIN (email + contraseña)
       // ===================================================
       const inputEmail = document.getElementById('input-email');
-      const btnBidali = document.getElementById('btn-bidali-esteka');
+      const inputPassword = document.getElementById('input-password');
+      const btnLogin = document.getElementById('btn-login');
       const loginMensaje = document.getElementById('login-mensaje');
 
       function mostrarMensajeLogin(texto, tipo) {
@@ -583,23 +613,61 @@
         loginMensaje.className = 'login-mensaje visible ' + tipo;
       }
 
-      btnBidali.addEventListener('click', async () => {
+      function ocultarMensajeLogin() {
+        loginMensaje.className = 'login-mensaje';
+      }
+
+      btnLogin.addEventListener('click', async () => {
         const email = inputEmail.value.trim();
-        if (!email) return;
+        const password = inputPassword.value;
+        if (!email || !password) return;
         const t = I18N[idiomaActivo];
-        btnBidali.disabled = true;
-        btnBidali.textContent = t.login_esperando;
-        const { error } = await sb.auth.signInWithOtp({
-          email,
-          options: { emailRedirectTo: window.location.origin + window.location.pathname }
-        });
-        btnBidali.disabled = false;
-        btnBidali.textContent = t.login_boton;
+        ocultarMensajeLogin();
+        btnLogin.disabled = true;
+        btnLogin.textContent = t.login_esperando;
+        const { error } = await sb.auth.signInWithPassword({ email, password });
+        btnLogin.disabled = false;
+        btnLogin.textContent = t.login_boton;
+        if (error) {
+          mostrarMensajeLogin(t.login_credenciales_okerrak, 'error');
+        }
+        // Si no hay error, onAuthStateChange se encarga de comprobar la sesión y mostrar el panel
+      });
+
+      // ===================================================
+      // RECUPERACIÓN: fijar contraseña nueva
+      // (se activa cuando se llega desde el enlace de "Send password recovery")
+      // ===================================================
+      const bloqueLogin = document.getElementById('bloque-login');
+      const bloqueRecovery = document.getElementById('bloque-recovery');
+      const btnRecovery = document.getElementById('btn-recovery');
+
+      function mostrarFormularioRecovery() {
+        bloqueLogin.style.display = 'none';
+        bloqueRecovery.style.display = 'block';
+      }
+
+      btnRecovery.addEventListener('click', async () => {
+        const t = I18N[idiomaActivo];
+        const p1 = document.getElementById('input-password-berria').value;
+        const p2 = document.getElementById('input-password-berria-2').value;
+        ocultarMensajeLogin();
+
+        if (p1.length < 6) { mostrarMensajeLogin(t.recovery_laburregia, 'error'); return; }
+        if (p1 !== p2) { mostrarMensajeLogin(t.recovery_ez_datoz_bat, 'error'); return; }
+
+        btnRecovery.disabled = true;
+        btnRecovery.textContent = t.recovery_esperando;
+        const { error } = await sb.auth.updateUser({ password: p1 });
+        btnRecovery.disabled = false;
+        btnRecovery.textContent = t.recovery_boton;
+
         if (error) {
           mostrarMensajeLogin(t.login_error_generico, 'error');
-        } else {
-          mostrarMensajeLogin(t.login_ok, 'exito');
+          return;
         }
+        mostrarMensajeLogin(t.recovery_ok, 'exito');
+        setTimeout(() => comprobarSesion(), 800);
       });
 
       document.getElementById('btn-salir').addEventListener('click', async () => {
@@ -640,6 +708,8 @@
         document.getElementById('panel').style.display = 'none';
         document.getElementById('usuario-chip').style.display = 'none';
         document.getElementById('btn-salir').style.display = 'none';
+        bloqueLogin.style.display = 'block';
+        bloqueRecovery.style.display = 'none';
       }
 
       function mostrarPanel() {
@@ -652,7 +722,11 @@
         cargarEventos();
       }
 
-      sb.auth.onAuthStateChange((_evento, _session) => {
+      sb.auth.onAuthStateChange((evento, _session) => {
+        if (evento === 'PASSWORD_RECOVERY') {
+          mostrarFormularioRecovery();
+          return;
+        }
         comprobarSesion();
       });
 
