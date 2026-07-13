@@ -2048,40 +2048,8 @@
         </svg>
         Datozen ekitaldi bereziak
       </h3>
-      <div class="ekitaldi-zerrenda">
-        <div class="ekitaldia">
-          <span class="ekitaldia-data">Maiatza</span>
-          <div class="ekitaldia-edukia">
-            <div class="ekitaldia-izena">Nordic Walking ikastaroak</div>
-            <p class="ekitaldia-azalpena">Makilekin ibiltzen ikasteko ikastaroak maiatzean zehar.</p>
-          </div>
-        </div>
-        <div class="ekitaldia">
-          <span class="ekitaldia-data">Laster</span>
-          <div class="ekitaldia-edukia">
-            <div class="ekitaldia-izena">Auzo periferikoetako tailerrak</div>
-            <p class="ekitaldia-azalpena">Erorikoen prebentzioa eta ibilaldia uztartzen dituzten tailerrak auzoetan.</p>
-          </div>
-        </div>
-        <div class="ekitaldia">
-          <span class="ekitaldia-data">Laster</span>
-          <div class="ekitaldia-edukia">
-            <div class="ekitaldia-izena">Cafés Baqué bisita gidatua</div>
-            <p class="ekitaldia-azalpena">Bisita gidatua, ibilaldi osasungarriaren formatuan.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aviso de versión dinámica futura (capa 2) -->
-      <div class="egutegia-app-oharra">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="egutegia-app-oharra-texto">
-          <strong>Programazio eguneratua</strong>
-          <span>Laster, egutegi dinamiko bat izango duzu data zehatzekin eta ekitaldi guztiekin. Bitartean, deitu edo idatzi azken berriak jasotzeko.</span>
-        </div>
+      <div class="ekitaldi-zerrenda" id="ekitaldi-berezi-zerrenda">
+        <p style="color:var(--gris-suave); font-size:14px;">Ekitaldiak kargatzen…</p>
       </div>
 
     </div>
@@ -2381,6 +2349,72 @@
 
     </div>
   </footer>
+
+  <script>
+    (function () {
+      const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
+      const HILABETEAK = ['URT','OTS','MAR','API','MAI','EKA','UZT','ABU','IRA','URR','AZA','ABE'];
+
+      function escapar(t) {
+        if (t == null) return '';
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      async function cargarEkitaldiBereziak() {
+        const cont = document.getElementById('ekitaldi-berezi-zerrenda');
+        if (!cont) return;
+
+        const params = new URLSearchParams({
+          select: 'titulo_eu,fecha_inicio,lugar,destacado',
+          published: 'eq.true',
+          estado: 'eq.publicado',
+          tipo: 'eq.puntual',
+          fecha_inicio: `gte.${new Date().toISOString()}`,
+          order: 'destacado.desc,fecha_inicio.asc',
+          limit: '3'
+        });
+
+        try {
+          const r = await fetch(`${SUPABASE_URL}/rest/v1/eventos?${params}`, {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          const eventos = await r.json();
+
+          if (!Array.isArray(eventos) || eventos.length === 0) {
+            cont.innerHTML = '<p style="color:var(--gris-suave); font-size:14px;">Momentu honetan ez dago datorren ekitaldirik programatuta.</p>';
+            return;
+          }
+
+          cont.innerHTML = eventos.map(ev => {
+            const d = new Date(ev.fecha_inicio);
+            const data = `${d.getDate()} ${HILABETEAK[d.getMonth()]}`;
+            const lugarTxt = ev.lugar ? escapar(ev.lugar) : '';
+            return `
+              <div class="ekitaldia">
+                <span class="ekitaldia-data">${data}</span>
+                <div class="ekitaldia-edukia">
+                  <div class="ekitaldia-izena">${escapar(ev.titulo_eu)}</div>
+                  ${lugarTxt ? `<p class="ekitaldia-azalpena">${lugarTxt}</p>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+        } catch (err) {
+          cont.innerHTML = '<p style="color:var(--gris-suave); font-size:14px;">Ezin izan dira ekitaldiak kargatu.</p>';
+          console.error('[Mobidurango]', err);
+        }
+      }
+
+      cargarEkitaldiBereziak();
+    })();
+  </script>
 
 </body>
 </html>
