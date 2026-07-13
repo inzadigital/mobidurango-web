@@ -2048,40 +2048,8 @@
         </svg>
         Próximos eventos especiales
       </h3>
-      <div class="ekitaldi-zerrenda">
-        <div class="ekitaldia">
-          <span class="ekitaldia-data">Mayo</span>
-          <div class="ekitaldia-edukia">
-            <div class="ekitaldia-izena">Cursos de Nordic Walking</div>
-            <p class="ekitaldia-azalpena">Cursos para aprender a caminar con bastones a lo largo de mayo.</p>
-          </div>
-        </div>
-        <div class="ekitaldia">
-          <span class="ekitaldia-data">Próximamente</span>
-          <div class="ekitaldia-edukia">
-            <div class="ekitaldia-izena">Talleres en los barrios periféricos</div>
-            <p class="ekitaldia-azalpena">Talleres en los barrios que combinan prevención de caídas y paseo.</p>
-          </div>
-        </div>
-        <div class="ekitaldia">
-          <span class="ekitaldia-data">Próximamente</span>
-          <div class="ekitaldia-edukia">
-            <div class="ekitaldia-izena">Visita guiada a Cafés Baqué</div>
-            <p class="ekitaldia-azalpena">Visita guiada, en formato de paseo saludable.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Aviso de versión dinámica futura (capa 2) -->
-      <div class="egutegia-app-oharra">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 16v-4M12 8h.01" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div class="egutegia-app-oharra-texto">
-          <strong>Programación actualizada</strong>
-          <span>Pronto tendrás un calendario dinámico con las fechas exactas y todos los eventos. Mientras tanto, llámanos o escríbenos para conocer las últimas novedades.</span>
-        </div>
+      <div class="ekitaldi-zerrenda" id="ekitaldi-berezi-zerrenda">
+        <p style="color:var(--gris-suave); font-size:14px;">Cargando eventos…</p>
       </div>
 
     </div>
@@ -2381,6 +2349,73 @@
 
     </div>
   </footer>
+
+  <script>
+    (function () {
+      const SUPABASE_URL = 'https://ierfdlysfjmjsgcwbwzq.supabase.co';
+      const SUPABASE_ANON_KEY = 'sb_publishable_mxXPEi_ETGwzhG-V4TKSUw_X71mKG8L';
+      const MESES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
+      function escapar(t) {
+        if (t == null) return '';
+        return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      }
+
+      async function cargarEkitaldiBereziak() {
+        const cont = document.getElementById('ekitaldi-berezi-zerrenda');
+        if (!cont) return;
+
+        const params = new URLSearchParams({
+          select: 'titulo_eu,titulo_es,fecha_inicio,lugar,destacado',
+          published: 'eq.true',
+          estado: 'eq.publicado',
+          tipo: 'eq.puntual',
+          fecha_inicio: `gte.${new Date().toISOString()}`,
+          order: 'destacado.desc,fecha_inicio.asc',
+          limit: '3'
+        });
+
+        try {
+          const r = await fetch(`${SUPABASE_URL}/rest/v1/eventos?${params}`, {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          const eventos = await r.json();
+
+          if (!Array.isArray(eventos) || eventos.length === 0) {
+            cont.innerHTML = '<p style="color:var(--gris-suave); font-size:14px;">Ahora mismo no hay ningún evento programado.</p>';
+            return;
+          }
+
+          cont.innerHTML = eventos.map(ev => {
+            const d = new Date(ev.fecha_inicio);
+            const data = `${d.getDate()} ${MESES[d.getMonth()]}`;
+            const titulo = ev.titulo_es || ev.titulo_eu;
+            const lugarTxt = ev.lugar ? escapar(ev.lugar) : '';
+            return `
+              <div class="ekitaldia">
+                <span class="ekitaldia-data">${data}</span>
+                <div class="ekitaldia-edukia">
+                  <div class="ekitaldia-izena">${escapar(titulo)}</div>
+                  ${lugarTxt ? `<p class="ekitaldia-azalpena">${lugarTxt}</p>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+
+        } catch (err) {
+          cont.innerHTML = '<p style="color:var(--gris-suave); font-size:14px;">No se han podido cargar los eventos.</p>';
+          console.error('[Mobidurango]', err);
+        }
+      }
+
+      cargarEkitaldiBereziak();
+    })();
+  </script>
 
 </body>
 </html>
